@@ -5,12 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Isaac Ceballos | Portfolio</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: monospace;
       background: #0f172a;
       color: #f1f5f9;
-      margin: 0;
-      padding: 0;
+      overflow: hidden;
+    }
+
+    .startup-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: 1.2em;
+      z-index: 9999;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background: #00ff00;
+      margin-left: 2px;
+      animation: blink 1s step-start infinite;
+      height: 1.2em;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease;
+      overflow-x: hidden;
+    }
+
+    .main-content.show {
+      opacity: 1;
+      overflow-x: auto;
     }
 
     header {
@@ -55,38 +100,13 @@
       text-decoration: underline;
     }
 
-    .terminal {
-      background: #1e293b;
-      color: #38bdf8;
-      padding: 20px;
-      font-size: 1.1em;
-      min-height: 100px;
-      white-space: pre-wrap;
-      border-bottom: 2px solid #334155;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
-    }
-
     .main {
-      display: none;
+      display: flex;
       flex-wrap: wrap;
       max-width: 1400px;
       margin: 30px auto;
       padding: 0 20px;
       gap: 40px;
-    }
-
-    .main.show {
-      display: flex;
     }
 
     .left {
@@ -193,77 +213,81 @@
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <span id="terminal-text"></span><span class="cursor">|</span>
+  <div class="startup-screen" id="startup">
+    <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <header>
-    <div class="logo">
-      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
-      <div>
-        <h1>Isaac Ceballos</h1>
-        <p>Engineering Student | Researcher | Innovator</p>
+  <div class="main-content" id="main-content">
+    <header>
+      <div class="logo">
+        <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+        <div>
+          <h1>Isaac Ceballos</h1>
+          <p>Engineering Student | Researcher | Innovator</p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
+      </nav>
+    </header>
+
+    <div class="main">
+      <div class="left">
+        <h2>About Me</h2>
+        <p>I'm passionate about solving problems through engineering, exploring space and tech, and building cool stuff like LiDAR scanners and autonomous robots.</p>
+
+        <h2>Projects</h2>
+
+        <div class="project">
+          <h2>🔭 C.O.R.D. Lunar Rover Concept</h2>
+          <p>A dual-rover concept (mother and snake) with sample collection, system engineering, and lunar CLPS planning involved. Focused on autonomy and surface exploration.</p>
+        </div>
+
+        <div class="project">
+          <h2>📡 Arduino LIDAR Scanner</h2>
+          <p>A room-mapping system using 2 servos and a LIDAR sensor. Captures 3D point data and visualizes it in Processing. Great intro to robotics and sensor fusion.</p>
+        </div>
+
+        <div class="project">
+          <h2>🌟 EV Lac Research – Stellar Flares & Red Dwarfs</h2>
+          <p>Studied the red dwarf star EV Lacertae, focusing on high-energy stellar flares using space telescope data. Explored impacts on potential habitability and detection methods using light curve analysis. Project involved research methods in astrophysics and data interpretation.</p>
+        </div>
+      </div>
+
+      <div class="right">
+        <img src="robot-cad.png" alt="CAD Model" class="img-top" />
+        <img src="observatory-moon.png" alt="Observatory Moon" class="img-bottom" />
       </div>
     </div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="projects.html">Projects</a>
-    </nav>
-  </header>
 
-  <div class="main" id="main-content">
-    <div class="left">
-      <h2>About Me</h2>
-      <p>I'm passionate about solving problems through engineering, exploring space and tech, and building cool stuff like LiDAR scanners and autonomous robots.</p>
-
-      <h2>Projects</h2>
-
-      <div class="project">
-        <h2>🔭 C.O.R.D. Lunar Rover Concept</h2>
-        <p>A dual-rover concept (mother and snake) with sample collection, system engineering, and lunar CLPS planning involved. Focused on autonomy and surface exploration.</p>
-      </div>
-
-      <div class="project">
-        <h2>📡 Arduino LIDAR Scanner</h2>
-        <p>A room-mapping system using 2 servos and a LIDAR sensor. Captures 3D point data and visualizes it in Processing. Great intro to robotics and sensor fusion.</p>
-      </div>
-
-      <div class="project">
-        <h2>🌟 EV Lac Research – Stellar Flares & Red Dwarfs</h2>
-        <p>Studied the red dwarf star EV Lacertae, focusing on high-energy stellar flares using space telescope data. Explored impacts on potential habitability and detection methods using light curve analysis. Project involved research methods in astrophysics and data interpretation.</p>
-      </div>
-    </div>
-
-    <div class="right">
-      <img src="robot-cad.png" alt="CAD Model" class="img-top" />
-      <img src="observatory-moon.png" alt="Observatory Moon" class="img-bottom" />
-    </div>
+    <footer>
+      &copy; 2025 Isaac Ceballos. All rights reserved.
+    </footer>
   </div>
-
-  <footer>
-    &copy; 2025 Isaac Ceballos. All rights reserved.
-  </footer>
 
   <script>
-    const text = 'isaac@retroskies:~$ echo "Welcome"\nWelcome to RetroSkies Lab';
-    const output = document.getElementById("terminal-text");
-    const mainContent = document.getElementById("main-content");
-    const cursor = document.querySelector(".cursor");
+    const startupText = 'isaac@retroskies:~$ echo "Welcome"\nWelcome to RetroSkies Lab';
+    const output = document.getElementById("terminal-output");
+    const startup = document.getElementById("startup");
+    const main = document.getElementById("main-content");
     let i = 0;
 
-    function typeEffect() {
-      if (i < text.length) {
-        output.innerHTML += text[i] === "\n" ? "<br>" : text[i];
+    function typeStartup() {
+      if (i < startupText.length) {
+        output.innerHTML += startupText[i] === "\n" ? "<br>" : startupText[i];
         i++;
-        setTimeout(typeEffect, 40);
+        setTimeout(typeStartup, 40);
       } else {
-        cursor.style.display = "none";
-        mainContent.classList.add("show");
+        setTimeout(() => {
+          startup.style.display = "none";
+          main.classList.add("show");
+        }, 700);
       }
     }
 
-    window.onload = typeEffect;
+    window.onload = typeStartup;
   </script>
 </body>
 </html>
