@@ -16,8 +16,15 @@
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 20px;
       background: #1e293b;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
     }
 
     header img {
@@ -35,6 +42,17 @@
       margin: 5px 0;
       font-size: 1.2em;
       color: #94a3b8;
+    }
+
+    nav a {
+      color: #38bdf8;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
     }
 
     .main {
@@ -110,15 +128,23 @@
       color: #94a3b8;
     }
 
-    /* 📱 Mobile Responsiveness */
+    /* 📱 Mobile Responsive */
     @media (max-width: 900px) {
       header {
         flex-direction: column;
         text-align: center;
       }
 
+      .logo {
+        justify-content: center;
+      }
+
       header img {
         margin-bottom: 10px;
+      }
+
+      nav {
+        margin-top: 10px;
       }
 
       .main {
@@ -144,11 +170,18 @@
 </head>
 <body>
   <header>
-    <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
-    <div>
-      <h1>Isaac Ceballos</h1>
-      <p>Engineering Student | Researcher | Innovator</p>
+    <div class="logo">
+      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <div>
+        <h1>Isaac Ceballos</h1>
+        <p>Engineering Student | Researcher | Innovator</p>
+      </div>
     </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+    </nav>
   </header>
 
   <div class="main">
