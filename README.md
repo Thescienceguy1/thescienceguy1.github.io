@@ -1,1 +1,1 @@
-# Thescienceguy1.github.io
+# Thescienceguy.github.io
