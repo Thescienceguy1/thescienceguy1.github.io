@@ -38,29 +38,50 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 30px auto;
       padding: 0 20px;
     }
 
-    .project {
+    .project-container {
+      display: flex;
+      flex-wrap: wrap;
       background: #1e293b;
       margin-bottom: 20px;
       padding: 20px;
       border-radius: 8px;
+      gap: 20px;
       transition: background 0.3s ease;
     }
 
-    .project:hover {
+    .project-container:hover {
       background: #334155;
     }
 
-    .project h2 {
-      margin-top: 0;
-      color: #38bdf8;
+    .project-text {
+      flex: 1;
+      min-width: 250px;
     }
 
-    .project p {
+    .project-image {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-image img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+
+    .project-text h2 {
+      color: #38bdf8;
+      margin-top: 0;
+    }
+
+    .project-text p {
       line-height: 1.6;
     }
 
@@ -86,19 +107,34 @@
 
     <h2>Projects</h2>
 
-    <div class="project">
-      <h2>🔭 C.O.R.D. Lunar Rover Concept</h2>
-      <p>A dual-rover concept (mother and snake) with sample collection, system engineering, and lunar CLPS planning involved. Focused on autonomy and surface exploration.</p>
+    <div class="project-container">
+      <div class="project-text">
+        <h2>🔭 C.O.R.D. Lunar Rover Concept</h2>
+        <p>A dual-rover concept (mother and snake) with sample collection, system engineering, and lunar CLPS planning involved. Focused on autonomy and surface exploration.</p>
+      </div>
+      <div class="project-image">
+        <img src="robot-cad.png" alt="C.O.R.D. Rover CAD" />
+      </div>
     </div>
 
-    <div class="project">
-      <h2>📡 Arduino LIDAR Scanner</h2>
-      <p>A room-mapping system using 2 servos and a LIDAR sensor. Captures 3D point data and visualizes it in Processing. Great intro to robotics and sensor fusion.</p>
+    <div class="project-container">
+      <div class="project-text">
+        <h2>📡 Arduino LIDAR Scanner</h2>
+        <p>A room-mapping system using 2 servos and a LIDAR sensor. Captures 3D point data and visualizes it in Processing. Great intro to robotics and sensor fusion.</p>
+      </div>
+      <div class="project-image">
+        <img src="robot-cad.png" alt="LIDAR Setup" />
+      </div>
     </div>
 
-    <div class="project">
-      <h2>🌟 EV Lac Research – Stellar Flares & Red Dwarfs</h2>
-      <p>Studied the red dwarf star EV Lacertae, focusing on high-energy stellar flares using space telescope data. Explored impacts on potential habitability and detection methods using light curve analysis. Project involved research methods in astrophysics and data interpretation.</p>
+    <div class="project-container">
+      <div class="project-text">
+        <h2>🌟 EV Lac Research – Stellar Flares & Red Dwarfs</h2>
+        <p>Studied the red dwarf star EV Lacertae, focusing on high-energy stellar flares using space telescope data. Explored impacts on potential habitability and detection methods using light curve analysis. Project involved research methods in astrophysics and data interpretation.</p>
+      </div>
+      <div class="project-image">
+        <img src="observatory-moon.png" alt="EV Lac Observation Dome" />
+      </div>
     </div>
 
     <p>More coming soon...</p>
