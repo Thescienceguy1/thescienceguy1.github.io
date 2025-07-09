@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -287,7 +287,17 @@
       }
     }
 
-    window.onload = typeStartup;
+    window.onload = () => {
+      if (sessionStorage.getItem("visitedHome")) {
+        // Skip terminal screen
+        startup.style.display = "none";
+        main.classList.add("show");
+      } else {
+        // Show terminal once per tab
+        sessionStorage.setItem("visitedHome", "true");
+        typeStartup();
+      }
+    };
   </script>
 </body>
 </html>
