@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -282,6 +282,7 @@
       } else {
         setTimeout(() => {
           startup.style.display = "none";
+          document.body.style.overflow = "auto"; // ✅ FIX: enable scrolling
           main.classList.add("show");
         }, 700);
       }
@@ -289,11 +290,10 @@
 
     window.onload = () => {
       if (sessionStorage.getItem("visitedHome")) {
-        // Skip terminal screen
         startup.style.display = "none";
+        document.body.style.overflow = "auto"; // ✅ also allow scroll here
         main.classList.add("show");
       } else {
-        // Show terminal once per tab
         sessionStorage.setItem("visitedHome", "true");
         typeStartup();
       }
