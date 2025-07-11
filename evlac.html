@@ -7,19 +7,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #0f0f0f;
-      color: #e0e0e0;
-      font-family: 'Fira Code', monospace;
+      margin: 0;
       padding: 2rem;
+      font-family: 'Fira Code', monospace;
+      background-color: #000000;
+      color: #00ff88;
     }
     h1, h2 {
-      color: #4ff57f;
+      color: #00ff88;
+      text-shadow: 0 0 8px #00ff88;
     }
     section {
-      background-color: #1e1e1e;
+      background-color: #0f0f0f;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 12px #00ff8855;
+      border-radius: 12px;
       padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 12px rgba(0,255,100,0.1);
       margin-bottom: 2rem;
     }
     img {
@@ -28,15 +31,36 @@
       display: block;
       margin: 1rem auto;
       border-radius: 0.5rem;
+      box-shadow: 0 0 8px #00ff88;
     }
     .description {
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.6;
+      color: #c0ffc0;
       margin-top: 1rem;
+    }
+    a {
+      color: #00ffaa;
+      text-decoration: none;
+    }
+    nav {
+      margin-bottom: 2rem;
+    }
+    nav a {
+      background: #00ff88;
+      color: black;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: #00ffaa;
     }
   </style>
 </head>
 <body>
+  <nav><a href="index.html">← Back to Home</a></nav>
   <h1>EV Lac Observation Summary</h1>
 
   <section>
