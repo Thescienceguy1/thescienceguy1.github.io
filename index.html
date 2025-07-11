@@ -58,25 +58,28 @@
 
     .quote-container {
       position: fixed;
-      bottom: 60px;
-      left: 0;
-      width: 100%;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 1.2em;
-      color: rgba(255, 255, 255, 0.1);
-      white-space: nowrap;
-      z-index: 0;
+      color: rgba(255, 255, 255, 0.6);
+      z-index: 1;
       pointer-events: none;
+      text-align: center;
+      max-width: 90%;
     }
 
     .quote-text {
       display: inline-block;
-      padding-left: 100vw;
-      animation: slideQuote 30s linear infinite;
+      white-space: nowrap;
+      animation: fadeInOut 12s linear infinite;
     }
 
-    @keyframes slideQuote {
-      from { transform: translateX(0); }
-      to { transform: translateX(-100vw); }
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     .startup-screen {
@@ -254,7 +257,6 @@
       z-index: 1;
     }
 
-    /* MOBILE RESPONSIVE */
     @media (max-width: 768px) {
       .image-top-right,
       .image-bottom-left {
@@ -276,7 +278,6 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- QUOTES -->
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
@@ -381,12 +382,13 @@
       '"Imagination will often carry us to worlds that never were." – Carl Sagan',
       '"The most incomprehensible thing about the universe is that it is comprehensible." – Einstein'
     ];
+    let quoteIndex = 0;
     function rotateQuote() {
-      const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteText.textContent = newQuote;
+      quoteText.textContent = quotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % quotes.length;
     }
     rotateQuote();
-    setInterval(rotateQuote, 30000);
+    setInterval(rotateQuote, 12000);
   </script>
 </body>
 </html>
