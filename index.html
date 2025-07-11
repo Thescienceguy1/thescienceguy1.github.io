@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Isaac Ceballos | Portfolio</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: monospace;
@@ -70,9 +66,7 @@
       animation: fadeInOut 12s linear infinite;
     }
 
-    .quote-text {
-      display: inline-block;
-    }
+    .quote-text { display: inline-block; }
 
     @keyframes fadeInOut {
       0% { opacity: 0; }
@@ -114,9 +108,7 @@
       height: 1.2em;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
+    @keyframes blink { 50% { opacity: 0; } }
 
     .main-content {
       opacity: 0;
@@ -126,9 +118,7 @@
       flex-direction: column;
     }
 
-    .main-content.show {
-      opacity: 1;
-    }
+    .main-content.show { opacity: 1; }
 
     header {
       display: flex;
@@ -151,16 +141,8 @@
       border-radius: 8px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-    }
-
-    header p {
-      margin: 5px 0;
-      font-size: 1.2em;
-      color: #94a3b8;
-    }
+    header h1 { margin: 0; font-size: 2.5em; }
+    header p { margin: 5px 0; font-size: 1.2em; color: #94a3b8; }
 
     .page-layout {
       flex: 1;
@@ -204,14 +186,8 @@
       font-size: 2.3em;
     }
 
-    .card-link p {
-      font-size: 1.2em;
-      color: #0f172a;
-    }
-
-    .card-link:hover p {
-      color: #f1f5f9;
-    }
+    .card-link p { font-size: 1.2em; color: #0f172a; }
+    .card-link:hover p { color: #f1f5f9; }
 
     .image-top-right,
     .image-bottom-left {
@@ -227,26 +203,21 @@
       box-shadow: 0 0 20px 8px #38bdf8;
     }
 
-    .sparkle {
-      animation: sparkle 1s ease-out;
+    .image-top-right { top: 30px; right: 40px; max-width: 360px; }
+    .image-bottom-left { bottom: 30px; left: 40px; max-width: 340px; }
+
+    .moon-widget {
+      position: absolute;
+      top: 90px;
+      left: 20px;
+      z-index: 5;
     }
 
-    @keyframes sparkle {
-      0% { box-shadow: 0 0 0px #ffffff; }
-      50% { box-shadow: 0 0 20px #38bdf8; }
-      100% { box-shadow: 0 0 0px #ffffff; }
-    }
-
-    .image-top-right {
-      top: 30px;
-      right: 40px;
-      max-width: 360px;
-    }
-
-    .image-bottom-left {
-      bottom: 30px;
-      left: 40px;
-      max-width: 340px;
+    .iss-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 5;
     }
 
     footer {
@@ -256,36 +227,17 @@
       z-index: 1;
     }
 
-    .widgets-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10;
-      text-align: right;
-    }
-
     @media (max-width: 768px) {
       .image-top-right,
-      .image-bottom-left {
-        display: none;
-      }
+      .image-bottom-left { display: none; }
 
-      .card-link {
-        padding: 30px 40px;
-      }
+      .card-link { padding: 30px 40px; }
 
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      header { flex-direction: column; align-items: flex-start; }
 
       .quote-container {
         font-size: 1.2em;
         top: calc(100vh / 2 + 180px);
-      }
-
-      .widgets-container {
-        display: none;
       }
     }
   </style>
@@ -294,23 +246,22 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- QUOTE -->
+  <div class="moon-widget">
+    <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="250" height="110" style="border:none;"></iframe>
+  </div>
+
+  <div class="iss-widget">
+    <iframe src="https://www.whereisiss.at/widget/widget.html" width="260" height="150" style="border:none;"></iframe>
+  </div>
+
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
 
-  <!-- ASTRONOMY WIDGETS -->
-  <div class="widgets-container">
-    <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="250" height="110" style="border: none;"></iframe><br>
-    <iframe src="https://stuffin.space" width="300" height="250" style="border: none; margin-top: 10px;"></iframe>
-  </div>
-
-  <!-- STARTUP SCREEN -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -334,7 +285,7 @@
         </a>
         <a href="logs.html" class="card-link">
           <h2>Observing Logs</h2>
-          <p>Check out night-by-night observation notes, flare captures, and telescope setup.</p>
+          <p>Nightly notes, flare events, and telescope captures from my observation sessions.</p>
         </a>
       </div>
 
@@ -359,6 +310,7 @@
       "[AI] Boot signature verified...",
       "[STATUS] All systems nominal."
     ];
+
     async function typeLines(lines, delay = 60) {
       for (let line of lines) {
         for (let char of line) {
@@ -369,6 +321,7 @@
         await new Promise(res => setTimeout(res, delay));
       }
     }
+
     async function runStartup() {
       await typeLines(hackerLines);
       await new Promise(res => setTimeout(res, 500));
@@ -379,6 +332,7 @@
       document.body.style.overflow = "auto";
       main.classList.add("show");
     }
+
     window.onload = () => {
       if (sessionStorage.getItem("visitedHome")) {
         startup.style.display = "none";
