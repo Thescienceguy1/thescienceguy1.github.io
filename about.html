@@ -6,61 +6,117 @@
   <title>About | Isaac Ceballos</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: monospace;
       background: #0f172a;
       color: #f1f5f9;
       margin: 0;
-      padding: 40px 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      opacity: 0;
-      transition: opacity 1.2s ease;
+      padding: 0;
     }
 
-    body.loaded {
-      opacity: 1;
+    header {
+      background-color: #1e293b;
+      padding: 20px;
+      text-align: center;
     }
 
-    h1 {
+    header h1 {
+      margin: 0;
       font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-
-    p {
-      line-height: 1.7;
-      font-size: 1.1em;
-      margin-bottom: 20px;
-    }
-
-    a {
       color: #38bdf8;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      color: #94a3b8;
       text-decoration: none;
       font-weight: bold;
     }
 
-    a:hover {
+    nav a:hover {
       text-decoration: underline;
     }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1e293b;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .terminal-tag {
+      background: #334155;
+      color: #00ff00;
+      font-size: 0.9em;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.8em;
+      color: #38bdf8;
+    }
+
+    p {
+      line-height: 1.8;
+      font-size: 1.1em;
+      color: #e2e8f0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      p {
+        font-size: 1em;
+      }
+    }
   </style>
-  <script>
-    // Wait for page to load, then add the "loaded" class to fade in
-    window.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('loaded');
-    });
-  </script>
 </head>
 <body>
-  <h1>About Me</h1>
 
-  <p>Hi, my name is Isaac Ceballos. I'm a community college student majoring in mechanical engineering with a strong interest in astronomy, astrophysics, and aerospace technology.</p>
+  <header>
+    <h1>About Me</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+    </nav>
+  </header>
 
-  <p>I work on hands-on projects that combine engineering and space science. These include building autonomous robots, LiDAR scanning systems, and conducting research on stellar activity like flares from red dwarf stars. I've also explored lunar rover design and developed sensor-based systems for mapping and data collection.</p>
+  <div class="container">
+    <div class="terminal-tag">isaac@retroskies:~$ whoami</div>
 
-  <p>To organize and share my work, I created <strong>RetroSkies Lab (RSL)</strong>, a personal startup and online platform where I archive and publish all my projects. RSL is meant to be a home for my research, technical experiments, and creative engineering ideas. Whether it's documenting astrophysics findings or prototyping a system, I use RSL to keep everything in one place.</p>
+    <h2>Isaac Ceballos</h2>
 
-  <p>This website is the official space for my ongoing journey in engineering, science, and exploration. Thanks for visiting and taking an interest in what I do.</p>
+    <p>I'm a community college student majoring in mechanical engineering. I specialize in astronomy, astrophysics, and aerospace systems, with a passion for combining hands-on engineering with space research.</p>
 
-  <p><a href="index.html">← Back to Home</a></p>
+    <p>I created <strong>RetroSkies Lab (RSL)</strong> — a personal startup and platform that holds my projects, technical findings, and research documentation. RSL is meant to be a creative space for building and sharing engineering experiments, from telescope-based studies to robotic systems and LIDAR applications.</p>
+
+    <p>Whether it's prototyping an autonomous rover, visualizing space flare data, or developing a new system from scratch, I'm all about pushing boundaries and keeping it fun. Thanks for exploring!</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Isaac Ceballos. All rights reserved.
+  </footer>
+
 </body>
 </html>
