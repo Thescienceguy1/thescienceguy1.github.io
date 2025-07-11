@@ -57,29 +57,29 @@
     }
 
     .quote-container {
-      position: fixed;
-      bottom: 80px;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-      z-index: 1;
-      pointer-events: none;
-    }
-    
-    .quote-text {
-      display: inline-block;
-      padding-right: 100vw;
+      position: absolute;
+      top: calc(100vh / 2 + 160px);
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 1.5em;
       color: #ffffff;
-      white-space: nowrap;
-      animation: slideRight 30s linear infinite;
-    }
-    
-    @keyframes slideRight {
-      from { transform: translateX(-100vw); }
-      to { transform: translateX(100vw); }
+      z-index: 1;
+      pointer-events: none;
+      text-align: center;
+      max-width: 90%;
+      animation: fadeInOut 12s linear infinite;
     }
 
+    .quote-text {
+      display: inline-block;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
 
     .startup-screen {
       position: fixed;
@@ -270,6 +270,11 @@
         flex-direction: column;
         align-items: flex-start;
       }
+
+      .quote-container {
+        font-size: 1.2em;
+        top: calc(100vh / 2 + 180px);
+      }
     }
   </style>
 </head>
@@ -277,14 +282,17 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
+  <!-- QUOTE -->
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
 
+  <!-- STARTUP SCREEN -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
