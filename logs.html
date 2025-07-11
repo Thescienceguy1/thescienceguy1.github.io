@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observation Logs | Isaac Ceballos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .starscape {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.08;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .starscape::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(1px);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none;
+      z-index: 1000;
+      mix-blend-mode: overlay;
+      transition: transform 0.05s ease;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background: #1e293b;
+      flex-wrap: wrap;
+      z-index: 1;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    header img {
+      width: 80px;
+      margin-right: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    header p {
+      margin: 5px 0;
+      font-size: 1.2em;
+      color: #94a3b8;
+    }
+
+    .container {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .log-entry {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 4px solid #38bdf8;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+
+    .log-entry h2 {
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      color: #38bdf8;
+    }
+
+    .log-entry p {
+      font-size: 1.1em;
+      color: #f1f5f9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="starscape"></div>
+  <div class="glow" id="glow"></div>
+
+  <header>
+    <div class="logo">
+      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <div>
+        <h1>Isaac Ceballos</h1>
+        <p>Observation Logs</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="log-entry">
+      <h2>July 10, 2025</h2>
+      <p>Test entry — clear skies and smooth tracking. EV Lac observed for about 1.5 hours. Saw possible minor flare activity. More detailed analysis coming soon.</p>
+    </div>
+
+    <div class="log-entry">
+      <h2>July 8, 2025</h2>
+      <p>Hazy at first, but conditions cleared up around 10PM. Captured clean shots of target region. Light curve review still in progress.</p>
+    </div>
+
+    <!-- Add more logs here later -->
+  </div>
+
+  <footer>
+    &copy; 2025 Isaac Ceballos. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener("mousemove", (e) => {
+      const glow = document.getElementById("glow");
+      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+  </script>
+</body>
+</html>
