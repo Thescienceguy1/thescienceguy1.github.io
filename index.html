@@ -1,4 +1,3 @@
-<!-- FULL INDEX.HTML WITH ADDED WIDGETS AND LOG LINK -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,25 +5,286 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Isaac Ceballos | Portfolio</title>
   <style>
-    /* (Keep all your original CSS as-is) */
-    /* ... your full styles remain unchanged ... */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .starscape {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.08;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .starscape::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(1px);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none;
+      z-index: 1000;
+      mix-blend-mode: overlay;
+      transition: transform 0.05s ease;
+    }
+
+    .quote-container {
+      position: absolute;
+      top: calc(100vh / 2 + 240px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5em;
+      color: #ffffff;
+      z-index: 1;
+      pointer-events: none;
+      text-align: center;
+      max-width: 90%;
+      animation: fadeInOut 12s linear infinite;
+    }
+
+    .quote-text {
+      display: inline-block;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .startup-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: 1.2em;
+      z-index: 9999;
+    }
+
+    #terminal-output {
+      white-space: pre-wrap;
+      max-width: 90vw;
+      text-align: left;
+      font-size: 1.1em;
+      line-height: 1.4em;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background: #00ff00;
+      margin-left: 2px;
+      animation: blink 1s step-start infinite;
+      height: 1.2em;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content.show {
+      opacity: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background: #1e293b;
+      flex-wrap: wrap;
+      z-index: 1;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    header img {
+      width: 80px;
+      margin-right: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    header p {
+      margin: 5px 0;
+      font-size: 1.2em;
+      color: #94a3b8;
+    }
+
+    .page-layout {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      position: relative;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      z-index: 1;
+      align-items: center;
+    }
+
+    .card-link {
+      display: block;
+      background-color: #38bdf8;
+      color: #0f172a;
+      padding: 40px 60px;
+      border-radius: 16px;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      width: 720px;
+      max-width: 96vw;
+    }
+
+    .card-link:hover {
+      background-color: #0ea5e9;
+      transform: translateX(5px);
+      color: #f1f5f9;
+      box-shadow: 0 0 25px 5px #0ea5e9;
+    }
+
+    .card-link h2 {
+      margin-bottom: 10px;
+      font-size: 2.3em;
+    }
+
+    .card-link p {
+      font-size: 1.2em;
+      color: #0f172a;
+    }
+
+    .card-link:hover p {
+      color: #f1f5f9;
+    }
+
+    .image-top-right,
+    .image-bottom-left {
+      position: absolute;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .image-top-right:hover,
+    .image-bottom-left:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px 8px #38bdf8;
+    }
+
+    .sparkle {
+      animation: sparkle 1s ease-out;
+    }
+
+    @keyframes sparkle {
+      0% { box-shadow: 0 0 0px #ffffff; }
+      50% { box-shadow: 0 0 20px #38bdf8; }
+      100% { box-shadow: 0 0 0px #ffffff; }
+    }
+
+    .image-top-right {
+      top: 30px;
+      right: 40px;
+      max-width: 360px;
+    }
+
+    .image-bottom-left {
+      bottom: 30px;
+      left: 40px;
+      max-width: 340px;
+    }
+
+    .widget-float {
+      position: absolute;
+      bottom: 120px;
+      right: 50%;
+      transform: translateX(50%);
+      z-index: 1;
+      text-align: center;
+    }
+
+    .widget-float iframe {
+      display: block;
+      margin: 10px auto;
+      border: none;
+      max-width: 300px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      z-index: 1;
+    }
   </style>
 </head>
 <body>
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- QUOTE -->
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
 
-  <!-- STARTUP SCREEN -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -51,22 +311,14 @@
           <p>Dive into nightly observation logs with telescope setups, flare captures, and notes from the sky.</p>
         </a>
       </div>
-
       <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
       <img loading="lazy" src="observatory-moon.png" alt="Moon above an observatory dome at night" class="image-bottom-left" id="imgBottom" />
-    </div>
 
-    <!-- Astronomy Widgets Section -->
-    <section style="text-align:center; margin-top: 80px;">
-      <h2>Live Astronomy Widgets</h2>
-      <div style="margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 30px;">
-        <!-- Moon Phase Widget -->
-        <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="100%" height="120" style="border:none; max-width:400px;"></iframe>
-
-        <!-- ISS Tracker Widget -->
-        <iframe src="https://heavens-above.com/iss.aspx?lat=0&lng=0&alt=0&loc=Unspecified&TZ=CET" width="100%" height="400" style="border:none; max-width:600px;"></iframe>
+      <div class="widget-float">
+        <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="200" height="110"></iframe>
+        <iframe src="https://heavens-above.com/iss.aspx?lat=0&lng=0&alt=0&loc=Unspecified&TZ=CET" width="300" height="200"></iframe>
       </div>
-    </section>
+    </div>
 
     <footer>
       &copy; 2025 Isaac Ceballos. All rights reserved.
@@ -74,7 +326,6 @@
   </div>
 
   <script>
-    // all your original JavaScript remains unchanged
     const output = document.getElementById("terminal-output");
     const startup = document.getElementById("startup");
     const main = document.getElementById("main-content");
