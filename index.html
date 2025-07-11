@@ -56,31 +56,6 @@
       transition: transform 0.05s ease;
     }
 
-    .quote-container {
-      position: absolute;
-      top: calc(100vh / 2 + 240px);
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.5em;
-      color: #ffffff;
-      z-index: 1;
-      pointer-events: none;
-      text-align: center;
-      max-width: 90%;
-      animation: fadeInOut 12s linear infinite;
-    }
-
-    .quote-text {
-      display: inline-block;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
     .startup-screen {
       position: fixed;
       top: 0;
@@ -160,20 +135,6 @@
       margin: 5px 0;
       font-size: 1.2em;
       color: #94a3b8;
-    }
-
-    .moon-widget {
-      position: absolute;
-      top: 110px;
-      left: 20px;
-      z-index: 10;
-    }
-
-    .iss-widget {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10;
     }
 
     .page-layout {
@@ -274,11 +235,6 @@
         flex-direction: column;
         align-items: flex-start;
       }
-
-      .quote-container {
-        font-size: 1.2em;
-        top: calc(100vh / 2 + 180px);
-      }
     }
   </style>
 </head>
@@ -286,24 +242,12 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- Moon Phase Widget (Fixed) -->
-  <div class="moon-widget">
-    <iframe src="https://www.icalendar37.net/lunar/api/?lang=en&month=current&size=small&lightColor=white&shadeColor=black&texturize=true" width="250" height="110" style="border:none;"></iframe>
-  </div>
-
-  <!-- ISS Tracker Widget (Fixed) -->
-  <div class="iss-widget">
-    <iframe src="https://heavens-above.com/iss.aspx?lat=0&lng=0&loc=Unspecified&alt=0&tz=UCT" width="260" height="150" style="border:none;"></iframe>
-  </div>
-
-  <div class="quote-container">
-    <div class="quote-text" id="quoteText"></div>
-  </div>
-
+  <!-- STARTUP SCREEN -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -394,23 +338,6 @@
     imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
-
-    const quoteText = document.getElementById("quoteText");
-    const quotes = [
-      '"Somewhere, something incredible is waiting to be known." – Carl Sagan',
-      '"We are a way for the cosmos to know itself." – Carl Sagan',
-      '"Look up at the stars and not down at your feet." – Stephen Hawking',
-      '"The universe is under no obligation to make sense to you." – Neil deGrasse Tyson',
-      '"Imagination will often carry us to worlds that never were." – Carl Sagan',
-      '"The most incomprehensible thing about the universe is that it is comprehensible." – Einstein'
-    ];
-    let quoteIndex = 0;
-    function rotateQuote() {
-      quoteText.textContent = quotes[quoteIndex];
-      quoteIndex = (quoteIndex + 1) % quotes.length;
-    }
-    rotateQuote();
-    setInterval(rotateQuote, 12000);
   </script>
 </body>
 </html>
