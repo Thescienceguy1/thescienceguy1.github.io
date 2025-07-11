@@ -24,7 +24,7 @@
       height: 100%;
       background: radial-gradient(white 1px, transparent 1px);
       background-size: 3px 3px;
-      opacity: 0.04;
+      opacity: 0.03;
       z-index: -10;
       pointer-events: none;
     }
@@ -42,18 +42,18 @@
     .astro-art svg {
       position: absolute;
       fill: #38bdf8;
-      opacity: 0.3;
-      animation: float 18s infinite ease-in-out;
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
     }
 
-    .astro-art svg:nth-child(1) { top: 8%; left: 20%; width: 80px; }
-    .astro-art svg:nth-child(2) { top: 25%; left: 75%; width: 90px; }
-    .astro-art svg:nth-child(3) { top: 60%; left: 15%; width: 70px; }
-    .astro-art svg:nth-child(4) { top: 65%; left: 50%; width: 80px; }
-    .astro-art svg:nth-child(5) { top: 35%; left: 10%; width: 60px; }
-    .astro-art svg:nth-child(6) { top: 80%; left: 80%; width: 70px; }
-    .astro-art svg:nth-child(7) { top: 50%; left: 40%; width: 75px; }
-    .astro-art svg:nth-child(8) { top: 15%; left: 55%; width: 85px; }
+    .astro-art svg:nth-child(1) { top: 5%; left: 10%; width: 90px; }
+    .astro-art svg:nth-child(2) { top: 15%; left: 80%; width: 100px; }
+    .astro-art svg:nth-child(3) { top: 40%; left: 20%; width: 90px; }
+    .astro-art svg:nth-child(4) { top: 60%; left: 75%; width: 100px; }
+    .astro-art svg:nth-child(5) { top: 75%; left: 35%; width: 85px; }
+    .astro-art svg:nth-child(6) { top: 25%; left: 45%; width: 90px; }
+    .astro-art svg:nth-child(7) { top: 85%; left: 80%; width: 70px; }
+    .astro-art svg:nth-child(8) { top: 50%; left: 55%; width: 95px; }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
@@ -218,25 +218,40 @@
   </style>
 </head>
 <body>
-  <!-- Background layers -->
+  <!-- Background Effects -->
   <div class="stars"></div>
   <div class="astro-art">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>
-    <svg viewBox="0 0 24 24"><path d="M2,12a10,10 0 0,0 20,0"/></svg>
-    <svg viewBox="0 0 24 24"><circle cx="4" cy="4" r="2"/><circle cx="20" cy="6" r="1.5"/><circle cx="12" cy="18" r="2"/></svg>
-    <svg viewBox="0 0 24 24"><path d="M4 12h16M12 4v16"/></svg>
-    <svg viewBox="0 0 24 24"><path d="M9 2l3 6 3-6M3 22h18"/></svg>
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M2 12h20"/></svg>
-    <svg viewBox="0 0 24 24"><path d="M12 2L6 22h12L12 2z"/></svg>
-    <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><path d="M5 5L19 5"/></svg>
+    <!-- Planet -->
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" /></svg>
+
+    <!-- Orbit ring -->
+    <svg viewBox="0 0 24 24"><path d="M2,12a10,10 0 0,0 20,0" /></svg>
+
+    <!-- Telescope -->
+    <svg viewBox="0 0 24 24"><path d="M14 2l-3 8 8 3 3-8-8-3zM12 21v-4m0 0H9m3 0h3" /></svg>
+
+    <!-- Star -->
+    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 22l-6-4-6 4 2.5-8.5L2 9h7z" /></svg>
+
+    <!-- Rocket -->
+    <svg viewBox="0 0 24 24"><path d="M12 2C8 6 6 10 6 14c0 2 2 4 4 4s4-2 4-4c0-4-2-8-6-12z" /></svg>
+
+    <!-- Satellite lines -->
+    <svg viewBox="0 0 24 24"><path d="M2 12h20M12 2v20" /></svg>
+
+    <!-- Planet with moons -->
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><circle cx="4" cy="6" r="2"/><circle cx="20" cy="18" r="1.5" /></svg>
+
+    <!-- Crosshairs -->
+    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4 12h4M16 12h4"/><circle cx="12" cy="12" r="3"/></svg>
   </div>
 
-  <!-- Startup Terminal -->
+  <!-- Terminal Startup -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Page -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
