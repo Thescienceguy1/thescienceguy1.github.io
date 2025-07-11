@@ -59,29 +59,27 @@
     .quote-container {
       position: fixed;
       bottom: 80px;
-      left: 60%;
-      transform: translateX(-50%);
-      font-size: 1.2em;
-      color: #ffffff;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
       z-index: 1;
       pointer-events: none;
-      text-align: center;
-      max-width: 80%;
     }
-
-
+    
     .quote-text {
       display: inline-block;
+      padding-right: 100vw;
+      font-size: 1.5em;
+      color: #ffffff;
       white-space: nowrap;
-      animation: fadeInOut 12s linear infinite;
+      animation: slideRight 30s linear infinite;
+    }
+    
+    @keyframes slideRight {
+      from { transform: translateX(-100vw); }
+      to { transform: translateX(100vw); }
     }
 
-    @keyframes fadeInOut {
-      0% { opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
 
     .startup-screen {
       position: fixed;
