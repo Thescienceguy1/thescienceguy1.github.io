@@ -19,7 +19,6 @@
       position: relative;
     }
 
-    /* Background star texture */
     .starscape {
       position: fixed;
       top: 0;
@@ -31,11 +30,10 @@
       background-repeat: no-repeat;
       background-position: center;
       opacity: 0.08;
-      z-index: -1;
+      z-index: -2;
       pointer-events: none;
     }
 
-    /* Glow Trail */
     .glow {
       position: fixed;
       top: 0;
@@ -50,7 +48,24 @@
       transition: transform 0.05s ease;
     }
 
-    /* Startup screen */
+    .quote-container {
+      position: fixed;
+      top: 80%;
+      left: -100%;
+      width: 100%;
+      font-size: 1.2em;
+      color: rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+      z-index: -1;
+      animation: slideQuote 30s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes slideQuote {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(120vw); }
+    }
+
     .startup-screen {
       position: fixed;
       top: 0;
@@ -196,7 +211,6 @@
       box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
     }
 
-    /* Sparkle animation */
     .sparkle {
       animation: sparkle 1s ease-out;
     }
@@ -228,16 +242,14 @@
   </style>
 </head>
 <body>
-  <!-- Background + Glow Trail -->
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
+  <div class="quote-container" id="quoteContainer"></div>
 
-  <!-- Startup Screen -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -317,21 +329,39 @@
       }
     };
 
-    // Glow trail follow
+    // Glow trail
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
-    // Sparkle effect on image hover
+    // Sparkle effect
     const imgTop = document.getElementById("imgTop");
     const imgBottom = document.getElementById("imgBottom");
-
     imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
     imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
-
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
+
+    // Rotating quotes
+    const quotes = [
+      '"Somewhere, something incredible is waiting to be known." – Carl Sagan',
+      '"We are a way for the cosmos to know itself." – Carl Sagan',
+      '"Look up at the stars and not down at your feet." – Stephen Hawking',
+      '"The most incomprehensible thing about the universe is that it is comprehensible." – Albert Einstein',
+      '"The universe is under no obligation to make sense to you." – Neil deGrasse Tyson',
+      '"Imagination will often carry us to worlds that never were." – Carl Sagan',
+    ];
+
+    const quoteContainer = document.getElementById("quoteContainer");
+
+    function rotateQuote() {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteContainer.textContent = randomQuote;
+    }
+
+    setInterval(rotateQuote, 32000);
+    rotateQuote();
   </script>
 </body>
 </html>
