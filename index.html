@@ -272,14 +272,23 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
+  <!-- Quotes -->
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
 
+  <!-- Astronomy Widgets -->
+  <div style="position: absolute; top: calc(100vh / 2 + 200px); left: 50%; transform: translateX(-50%); z-index: 5; text-align: center;">
+    <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="250" height="110" style="border: none;"></iframe>
+    <iframe src="https://heavens-above.com/iss.aspx?lat=0&lng=0&alt=0&loc=Unspecified&TZ=CET" width="300" height="200" style="border: none; margin-top: 10px;"></iframe>
+  </div>
+
+  <!-- Startup Terminal Screen -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
+  <!-- Main Content -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -334,10 +343,11 @@
           output.innerHTML += char;
           await new Promise(res => setTimeout(res, 10 + Math.random() * 20));
         }
-        output.innerHTML += "\\n";
+        output.innerHTML += "\n";
         await new Promise(res => setTimeout(res, delay));
       }
     }
+
     async function runStartup() {
       await typeLines(hackerLines);
       await new Promise(res => setTimeout(res, 500));
@@ -350,7 +360,7 @@
     }
 
     window.onload = () => {
-      runStartup(); // Always show startup
+      runStartup();
     };
 
     document.addEventListener("mousemove", (e) => {
