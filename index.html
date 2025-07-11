@@ -221,30 +221,18 @@
       z-index: 1;
     }
 
-    .astro-ticker {
+    .sky-forecast {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(15, 23, 42, 0.95);
+      bottom: 20px;
+      right: 20px;
+      background: rgba(30, 41, 59, 0.95);
       color: #38bdf8;
-      font-size: 1em;
       font-family: monospace;
-      padding: 8px 0;
-      z-index: 100;
-      overflow: hidden;
-    }
-
-    .ticker-content {
-      display: inline-block;
-      white-space: nowrap;
-      animation: scrollTicker 60s linear infinite;
-      padding-left: 100%;
-    }
-
-    @keyframes scrollTicker {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      z-index: 999;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     }
 
     @media (max-width: 768px) {
@@ -310,10 +298,8 @@
     </footer>
   </div>
 
-  <!-- ASTRONOMY TICKER -->
-  <div class="astro-ticker">
-    <div class="ticker-content" id="eventTicker">Loading astronomy events...</div>
-  </div>
+  <!-- SKY FORECAST BOX -->
+  <div class="sky-forecast" id="skyForecast">Loading sky forecast...</div>
 
   <script>
     const output = document.getElementById("terminal-output");
@@ -370,28 +356,44 @@
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
 
-    // Astronomy Event Ticker API
-    async function fetchAstronomyEvents() {
-      const url = "https://in-the-sky.org/api.php?format=json&maxdiff=45";
+    // Sky Forecast Script for Porterville
+    async function getSkyForecast() {
+      const portervilleLat = 36.0652;
+      const portervilleLon = -119.0168;
+      const forecastBox = document.getElementById("skyForecast");
+
       try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const events = data?.events || [];
+        const now = new Date();
+        const todayISO = now.toISOString().split("T")[0];
 
-        const formatted = events.slice(0, 10).map(event => {
-          const date = new Date(event.date).toDateString();
-          return `${event.type} – ${event.title} (${date})`;
-        });
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${portervilleLat}&longitude=${portervilleLon}&hourly=cloudcover&timezone=America%2FLos_Angeles&start_date=${todayISO}&end_date=${todayISO}`;
 
-        const ticker = document.getElementById("eventTicker");
-        ticker.innerHTML = formatted.join(" &nbsp;&nbsp;|&nbsp;&nbsp; ") || "No upcoming events found.";
-      } catch (error) {
-        console.error("Failed to fetch astronomy events:", error);
-        document.getElementById("eventTicker").textContent = "Unable to load astronomy events.";
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const hours = data.hourly.time;
+        const clouds = data.hourly.cloudcover;
+
+        const hourIndex = hours.findIndex(t => t.includes("21:00")); // 9PM
+        const cloudPercent = clouds[hourIndex];
+
+        let message = "";
+        if (cloudPercent < 30) {
+          message = `✨ Tonight: Mostly Clear (${cloudPercent}% cloud cover)`;
+        } else if (cloudPercent < 70) {
+          message = `🌤️ Tonight: Partly Cloudy (${cloudPercent}%)`;
+        } else {
+          message = `☁️ Tonight: Cloudy (${cloudPercent}%)`;
+        }
+
+        forecastBox.textContent = message;
+      } catch (err) {
+        console.error("Error fetching forecast:", err);
+        forecastBox.textContent = "Unable to load sky forecast.";
       }
     }
 
-    fetchAstronomyEvents();
+    getSkyForecast();
   </script>
 </body>
 </html>
