@@ -34,6 +34,14 @@
       pointer-events: none;
     }
 
+    .starscape::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(1px);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
     .glow {
       position: fixed;
       top: 0;
@@ -176,7 +184,7 @@
       padding: 40px 60px;
       border-radius: 16px;
       text-decoration: none;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       width: 720px;
       max-width: 96vw;
@@ -186,6 +194,7 @@
       background-color: #0ea5e9;
       transform: translateX(5px);
       color: #f1f5f9;
+      box-shadow: 0 0 25px 5px #0ea5e9;
     }
 
     .card-link h2 {
@@ -244,6 +253,23 @@
       color: #94a3b8;
       z-index: 1;
     }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 768px) {
+      .image-top-right,
+      .image-bottom-left {
+        display: none;
+      }
+
+      .card-link {
+        padding: 30px 40px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
@@ -282,8 +308,8 @@
         </a>
       </div>
 
-      <img src="robot-cad.png" alt="CAD Model" class="image-top-right" id="imgTop" />
-      <img src="observatory-moon.png" alt="Observatory Moon" class="image-bottom-left" id="imgBottom" />
+      <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
+      <img loading="lazy" src="observatory-moon.png" alt="Moon above an observatory dome at night" class="image-bottom-left" id="imgBottom" />
     </div>
 
     <footer>
@@ -292,7 +318,6 @@
   </div>
 
   <script>
-    // startup typing
     const output = document.getElementById("terminal-output");
     const startup = document.getElementById("startup");
     const main = document.getElementById("main-content");
@@ -335,13 +360,11 @@
       }
     };
 
-    // glow trail
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
-    // sparkle
     const imgTop = document.getElementById("imgTop");
     const imgBottom = document.getElementById("imgBottom");
     imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
@@ -349,7 +372,6 @@
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
 
-    // quotes
     const quoteText = document.getElementById("quoteText");
     const quotes = [
       '"Somewhere, something incredible is waiting to be known." – Carl Sagan',
