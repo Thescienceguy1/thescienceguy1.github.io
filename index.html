@@ -102,113 +102,52 @@
 
     .main {
       display: flex;
-      flex-wrap: wrap;
-      max-width: 1400px;
-      margin: 30px auto;
-      padding: 0 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
       gap: 40px;
     }
 
-    .left {
-      flex: 2;
-      padding-left: 200px;
-      min-width: 300px;
-    }
-
-    .right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      min-width: 200px;
-    }
-
-    .right img {
+    .main img {
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .right img:hover {
+    .main img:hover {
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     }
 
-    .right .img-top {
-      align-self: flex-start;
-      width: 85%;
+    .main .img-top {
+      width: 70%;
     }
 
-    .right .img-bottom {
-      align-self: flex-end;
-      width: 75%;
+    .main .img-bottom {
+      width: 60%;
     }
 
-    .project {
-      background: #1e293b;
-      margin-bottom: 20px;
-      padding: 20px;
+    .main .buttons {
+      margin-top: 30px;
+    }
+
+    .main .buttons a {
+      margin: 10px;
+      padding: 12px 24px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: bold;
+      text-decoration: none;
       border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    .project:hover {
-      background: #334155;
-    }
-
-    .project h2 {
-      margin-top: 0;
-      color: #38bdf8;
-    }
-
-    .project p {
-      line-height: 1.6;
     }
 
     footer {
       text-align: center;
       padding: 20px;
       color: #94a3b8;
-    }
-
-    @media (max-width: 900px) {
-      header {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .logo {
-        justify-content: center;
-      }
-
-      header img {
-        margin-bottom: 10px;
-      }
-
-      nav {
-        margin-top: 10px;
-      }
-
-      .main {
-        flex-direction: column;
-        padding: 0 10px;
-      }
-
-      .left {
-        padding-left: 0;
-      }
-
-      .right {
-        align-items: center;
-      }
-
-      .right .img-top,
-      .right .img-bottom {
-        align-self: center;
-        width: 90%;
-      }
     }
   </style>
 </head>
@@ -227,38 +166,17 @@
         </div>
       </div>
       <nav>
-        <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="projects.html">Projects</a>
       </nav>
     </header>
 
     <div class="main">
-      <div class="left">
-        <h2>About Me</h2>
-        <p>I'm passionate about solving problems through engineering, exploring space and tech, and building cool stuff like LiDAR scanners and autonomous robots.</p>
-
-        <h2>Projects</h2>
-
-        <div class="project">
-          <h2>🔭 C.O.R.D. Lunar Rover Concept</h2>
-          <p>A dual-rover concept (mother and snake) with sample collection, system engineering, and lunar CLPS planning involved. Focused on autonomy and surface exploration.</p>
-        </div>
-
-        <div class="project">
-          <h2>📡 Arduino LIDAR Scanner</h2>
-          <p>A room-mapping system using 2 servos and a LIDAR sensor. Captures 3D point data and visualizes it in Processing. Great intro to robotics and sensor fusion.</p>
-        </div>
-
-        <div class="project">
-          <h2>🌟 EV Lac Research – Stellar Flares & Red Dwarfs</h2>
-          <p>Studied the red dwarf star EV Lacertae, focusing on high-energy stellar flares using space telescope data. Explored impacts on potential habitability and detection methods using light curve analysis. Project involved research methods in astrophysics and data interpretation.</p>
-        </div>
-      </div>
-
-      <div class="right">
-        <img src="robot-cad.png" alt="CAD Model" class="img-top" />
-        <img src="observatory-moon.png" alt="Observatory Moon" class="img-bottom" />
+      <img src="robot-cad.png" alt="CAD Model" class="img-top" />
+      <img src="observatory-moon.png" alt="Observatory Moon" class="img-bottom" />
+      <div class="buttons">
+        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
       </div>
     </div>
 
@@ -268,7 +186,7 @@
   </div>
 
   <script>
-    const startupText = 'isaac@retroskies:~$ echo "Welcome"\nWelcome to RetroSkies Lab';
+    const startupText = 'isaac@retroskies:~$ echo "Welcome"\\nWelcome to RetroSkies Lab';
     const output = document.getElementById("terminal-output");
     const startup = document.getElementById("startup");
     const main = document.getElementById("main-content");
@@ -276,13 +194,13 @@
 
     function typeStartup() {
       if (i < startupText.length) {
-        output.innerHTML += startupText[i] === "\n" ? "<br>" : startupText[i];
+        output.innerHTML += startupText[i] === "\\n" ? "<br>" : startupText[i];
         i++;
         setTimeout(typeStartup, 40);
       } else {
         setTimeout(() => {
           startup.style.display = "none";
-          document.body.style.overflow = "auto"; // ✅ FIX: enable scrolling
+          document.body.style.overflow = "auto";
           main.classList.add("show");
         }, 700);
       }
@@ -291,7 +209,7 @@
     window.onload = () => {
       if (sessionStorage.getItem("visitedHome")) {
         startup.style.display = "none";
-        document.body.style.overflow = "auto"; // ✅ also allow scroll here
+        document.body.style.overflow = "auto";
         main.classList.add("show");
       } else {
         sessionStorage.setItem("visitedHome", "true");
