@@ -50,20 +50,25 @@
 
     .quote-container {
       position: fixed;
-      top: 80%;
-      left: -100%;
+      bottom: 60px;
+      left: 0;
       width: 100%;
       font-size: 1.2em;
-      color: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.1);
       white-space: nowrap;
-      z-index: -1;
-      animation: slideQuote 30s linear infinite;
+      z-index: 0;
       pointer-events: none;
     }
 
+    .quote-text {
+      display: inline-block;
+      padding-left: 100vw;
+      animation: slideQuote 30s linear infinite;
+    }
+
     @keyframes slideQuote {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(120vw); }
+      from { transform: translateX(0); }
+      to { transform: translateX(-100vw); }
     }
 
     .startup-screen {
@@ -207,8 +212,8 @@
 
     .image-top-right:hover,
     .image-bottom-left:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
+      transform: scale(1.08);
+      box-shadow: 0 0 20px 8px #38bdf8;
     }
 
     .sparkle {
@@ -217,7 +222,7 @@
 
     @keyframes sparkle {
       0% { box-shadow: 0 0 0px #ffffff; }
-      50% { box-shadow: 0 0 12px #38bdf8; }
+      50% { box-shadow: 0 0 20px #38bdf8; }
       100% { box-shadow: 0 0 0px #ffffff; }
     }
 
@@ -244,7 +249,11 @@
 <body>
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
-  <div class="quote-container" id="quoteContainer"></div>
+
+  <!-- QUOTES -->
+  <div class="quote-container">
+    <div class="quote-text" id="quoteText"></div>
+  </div>
 
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
@@ -283,19 +292,18 @@
   </div>
 
   <script>
+    // startup typing
     const output = document.getElementById("terminal-output");
     const startup = document.getElementById("startup");
     const main = document.getElementById("main-content");
-
     const hackerLines = [
       "[BOOT] Initializing system...",
       "[INFO] Loading modules: core, optics, servo...",
       "[ACCESS] Granting user: isaac_ceballos",
       "[SYS] Calibrating sensors...",
       "[AI] Boot signature verified...",
-      "[STATUS] All systems nominal.",
+      "[STATUS] All systems nominal."
     ];
-
     async function typeLines(lines, delay = 60) {
       for (let line of lines) {
         for (let char of line) {
@@ -306,7 +314,6 @@
         await new Promise(res => setTimeout(res, delay));
       }
     }
-
     async function runStartup() {
       await typeLines(hackerLines);
       await new Promise(res => setTimeout(res, 500));
@@ -317,7 +324,6 @@
       document.body.style.overflow = "auto";
       main.classList.add("show");
     }
-
     window.onload = () => {
       if (sessionStorage.getItem("visitedHome")) {
         startup.style.display = "none";
@@ -329,13 +335,13 @@
       }
     };
 
-    // Glow trail
+    // glow trail
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
-    // Sparkle effect
+    // sparkle
     const imgTop = document.getElementById("imgTop");
     const imgBottom = document.getElementById("imgBottom");
     imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
@@ -343,25 +349,22 @@
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
 
-    // Rotating quotes
+    // quotes
+    const quoteText = document.getElementById("quoteText");
     const quotes = [
       '"Somewhere, something incredible is waiting to be known." – Carl Sagan',
       '"We are a way for the cosmos to know itself." – Carl Sagan',
       '"Look up at the stars and not down at your feet." – Stephen Hawking',
-      '"The most incomprehensible thing about the universe is that it is comprehensible." – Albert Einstein',
       '"The universe is under no obligation to make sense to you." – Neil deGrasse Tyson',
       '"Imagination will often carry us to worlds that never were." – Carl Sagan',
+      '"The most incomprehensible thing about the universe is that it is comprehensible." – Einstein'
     ];
-
-    const quoteContainer = document.getElementById("quoteContainer");
-
     function rotateQuote() {
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteContainer.textContent = randomQuote;
+      const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteText.textContent = newQuote;
     }
-
-    setInterval(rotateQuote, 32000);
     rotateQuote();
+    setInterval(rotateQuote, 30000);
   </script>
 </body>
 </html>
