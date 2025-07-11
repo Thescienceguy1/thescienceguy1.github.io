@@ -58,7 +58,7 @@
 
     .quote-container {
       position: absolute;
-      top: calc(100vh / 2 + 240px);
+      top: calc(100vh / 2 + 260px);
       left: 50%;
       transform: translateX(-50%);
       font-size: 1.5em;
@@ -227,16 +227,6 @@
       box-shadow: 0 0 20px 8px #38bdf8;
     }
 
-    .sparkle {
-      animation: sparkle 1s ease-out;
-    }
-
-    @keyframes sparkle {
-      0% { box-shadow: 0 0 0px #ffffff; }
-      50% { box-shadow: 0 0 20px #38bdf8; }
-      100% { box-shadow: 0 0 0px #ffffff; }
-    }
-
     .image-top-right {
       top: 30px;
       right: 40px;
@@ -249,27 +239,32 @@
       max-width: 340px;
     }
 
-    .widget-float {
-      position: absolute;
-      bottom: 120px;
-      right: 50%;
-      transform: translateX(50%);
-      z-index: 1;
-      text-align: center;
-    }
-
-    .widget-float iframe {
-      display: block;
-      margin: 10px auto;
-      border: none;
-      max-width: 300px;
-    }
-
     footer {
       text-align: center;
       padding: 20px;
       color: #94a3b8;
       z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .image-top-right,
+      .image-bottom-left {
+        display: none;
+      }
+
+      .card-link {
+        padding: 30px 40px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .quote-container {
+        font-size: 1.2em;
+        top: calc(100vh / 2 + 180px);
+      }
     }
   </style>
 </head>
@@ -277,14 +272,17 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
+  <!-- QUOTE -->
   <div class="quote-container">
     <div class="quote-text" id="quoteText"></div>
   </div>
 
+  <!-- STARTUP SCREEN -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -308,16 +306,12 @@
         </a>
         <a href="logs.html" class="card-link">
           <h2>Observing Logs</h2>
-          <p>Dive into nightly observation logs with telescope setups, flare captures, and notes from the sky.</p>
+          <p>Check out night-by-night observation records with flare data and telescope setup.</p>
         </a>
       </div>
+
       <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
       <img loading="lazy" src="observatory-moon.png" alt="Moon above an observatory dome at night" class="image-bottom-left" id="imgBottom" />
-
-      <div class="widget-float">
-        <iframe src="https://www.moonmodule.com/widgets/moon_phases/mini" width="200" height="110"></iframe>
-        <iframe src="https://heavens-above.com/iss.aspx?lat=0&lng=0&alt=0&loc=Unspecified&TZ=CET" width="300" height="200"></iframe>
-      </div>
     </div>
 
     <footer>
