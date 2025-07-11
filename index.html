@@ -16,9 +16,10 @@
       background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
       color: #f1f5f9;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* Starscape overlay */
+    /* Background star texture */
     .starscape {
       position: fixed;
       top: 0;
@@ -34,6 +35,22 @@
       pointer-events: none;
     }
 
+    /* Glow Trail */
+    .glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none;
+      z-index: 1000;
+      mix-blend-mode: overlay;
+      transition: transform 0.05s ease;
+    }
+
+    /* Startup screen */
     .startup-screen {
       position: fixed;
       top: 0;
@@ -179,6 +196,17 @@
       box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
     }
 
+    /* Sparkle animation */
+    .sparkle {
+      animation: sparkle 1s ease-out;
+    }
+
+    @keyframes sparkle {
+      0% { box-shadow: 0 0 0px #ffffff; }
+      50% { box-shadow: 0 0 12px #38bdf8; }
+      100% { box-shadow: 0 0 0px #ffffff; }
+    }
+
     .image-top-right {
       top: 30px;
       right: 40px;
@@ -200,15 +228,16 @@
   </style>
 </head>
 <body>
-  <!-- Starry background -->
+  <!-- Background + Glow Trail -->
   <div class="starscape"></div>
+  <div class="glow" id="glow"></div>
 
-  <!-- Terminal startup -->
+  <!-- Startup Screen -->
   <div class="startup-screen" id="startup">
     <span id="terminal-output"></span><span class="cursor"></span>
   </div>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <div class="main-content" id="main-content">
     <header>
       <div class="logo">
@@ -228,12 +257,12 @@
         </a>
         <a href="projects.html" class="card-link">
           <h2>Projects</h2>
-          <p>Explore my latest work — from robotics and LIDAR to space observation campaigns and more.</p>
+          <p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p>
         </a>
       </div>
 
-      <img src="robot-cad.png" alt="CAD Model" class="image-top-right" />
-      <img src="observatory-moon.png" alt="Observatory Moon" class="image-bottom-left" />
+      <img src="robot-cad.png" alt="CAD Model" class="image-top-right" id="imgTop" />
+      <img src="observatory-moon.png" alt="Observatory Moon" class="image-bottom-left" id="imgBottom" />
     </div>
 
     <footer>
@@ -287,6 +316,22 @@
         runStartup();
       }
     };
+
+    // Glow trail follow
+    document.addEventListener("mousemove", (e) => {
+      const glow = document.getElementById("glow");
+      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    // Sparkle effect on image hover
+    const imgTop = document.getElementById("imgTop");
+    const imgBottom = document.getElementById("imgBottom");
+
+    imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
+    imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
+
+    imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
+    imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
   </script>
 </body>
 </html>
