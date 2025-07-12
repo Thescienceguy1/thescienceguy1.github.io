@@ -246,16 +246,114 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- Cloud Cover Widget -->
+  <!-- Astronomy Forecast Widget -->
   <div style="position: fixed; bottom: 20px; right: 20px; z-index: 10;">
-    <iframe 
-      src="https://www.meteoblue.com/en/weather/widget/cloudcover/porterville_united-states_5383187?geoloc=fixed&nocurrent=1&noforecast=0&days=1" 
-      frameborder="0" 
-      scrolling="NO" 
-      allowtransparency="true" 
-      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" 
-      style="width: 300px; height: 250px"
-    ></iframe>
+    <iframe src="https://www.meteoblue.com/en/weather/widget/seeing/porterville_united-states_5383187?geoloc=fixed&nocurrent=0&noforecast=1&days=3&tempunit=FAHRENHEIT" frameborder="0" scrolling="no" width="180" height="210"></iframe>
   </div>
+
+  <!-- STARTUP SCREEN -->
+  <div class="startup-screen" id="startup">
+    <span id="terminal-output"></span><span class="cursor"></span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" id="main-content">
+    <header>
+      <div class="logo">
+        <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+        <div>
+          <h1>Isaac Ceballos</h1>
+          <p>Engineering Student | Researcher | Innovator</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-layout">
+      <div class="sidebar">
+        <a href="about.html" class="card-link">
+          <h2>About</h2>
+          <p>Learn more about who I am, my background, and what drives my passion for engineering and discovery.</p>
+        </a>
+        <a href="projects.html" class="card-link">
+          <h2>Projects</h2>
+          <p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p>
+        </a>
+        <a href="logs.html" class="card-link">
+          <h2>Observing Logs</h2>
+          <p>Nightly notes, flare events, and telescope captures from my observation sessions.</p>
+        </a>
+
+        <!-- Secret Link (hidden) -->
+        <p style="margin-top: 20px; font-size: 0.9em; text-align: center;">
+          <a href="secret.html" style="color: #475569; text-decoration: none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#475569'">
+            [access terminal]
+          </a>
+        </p>
+      </div>
+
+      <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
+      <img loading="lazy" src="observatory-moon.png" alt="Moon above an observatory dome at night" class="image-bottom-left" id="imgBottom" />
+    </div>
+
+    <footer>
+      &copy; 2025 Isaac Ceballos. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    const output = document.getElementById("terminal-output");
+    const startup = document.getElementById("startup");
+    const main = document.getElementById("main-content");
+    const hackerLines = [
+      "[BOOT] Initializing system...",
+      "[INFO] Loading modules: core, optics, servo...",
+      "[ACCESS] Granting user: RetroComputer",
+      "[SYS] Calibrating sensors...",
+      "[AI] Boot signature verified...",
+      "[STATUS] All systems nominal."
+    ];
+    async function typeLines(lines, delay = 60) {
+      for (let line of lines) {
+        for (let char of line) {
+          output.innerHTML += char;
+          await new Promise(res => setTimeout(res, 10 + Math.random() * 20));
+        }
+        output.innerHTML += "\n";
+        await new Promise(res => setTimeout(res, delay));
+      }
+    }
+    async function runStartup() {
+      await typeLines(hackerLines);
+      await new Promise(res => setTimeout(res, 500));
+      output.innerHTML = "";
+      await typeLines(["Welcome to RetroSkies Lab"], 60);
+      await new Promise(res => setTimeout(res, 1000));
+      startup.style.display = "none";
+      document.body.style.overflow = "auto";
+      main.classList.add("show");
+    }
+    window.onload = () => {
+      if (sessionStorage.getItem("visitedHome")) {
+        startup.style.display = "none";
+        document.body.style.overflow = "auto";
+        main.classList.add("show");
+      } else {
+        sessionStorage.setItem("visitedHome", "true");
+        runStartup();
+      }
+    };
+
+    document.addEventListener("mousemove", (e) => {
+      const glow = document.getElementById("glow");
+      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    const imgTop = document.getElementById("imgTop");
+    const imgBottom = document.getElementById("imgBottom");
+    imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
+    imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
+    imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
+    imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
+  </script>
 </body>
 </html>
