@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Isaac Ceballos | Portfolio</title>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -273,10 +277,13 @@
           <h2>Observing Logs</h2>
           <p>Nightly notes, flare events, and telescope captures from my observation sessions.</p>
         </a>
-        <a href="secret.html" class="card-link">
-          <h2>🔒 Secret Project</h2>
-          <p>Access a private work-in-progress prototype. Password required.</p>
-        </a>
+
+        <!-- Secret Link (hidden) -->
+        <p style="margin-top: 20px; font-size: 0.9em; text-align: center;">
+          <a href="secret.html" style="color: #475569; text-decoration: none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#475569'">
+            [access terminal]
+          </a>
+        </p>
       </div>
 
       <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
