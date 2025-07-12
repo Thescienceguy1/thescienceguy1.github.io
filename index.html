@@ -221,20 +221,6 @@
       z-index: 1;
     }
 
-    .sky-forecast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(30, 41, 59, 0.95);
-      color: #38bdf8;
-      font-family: monospace;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.95em;
-      z-index: 999;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    }
-
     @media (max-width: 768px) {
       .image-top-right,
       .image-bottom-left {
@@ -287,6 +273,10 @@
           <h2>Observing Logs</h2>
           <p>Nightly notes, flare events, and telescope captures from my observation sessions.</p>
         </a>
+        <a href="secret.html" class="card-link">
+          <h2>🔒 Secret Project</h2>
+          <p>Access a private work-in-progress prototype. Password required.</p>
+        </a>
       </div>
 
       <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image-top-right" id="imgTop" />
@@ -297,9 +287,6 @@
       &copy; 2025 Isaac Ceballos. All rights reserved.
     </footer>
   </div>
-
-  <!-- SKY FORECAST BOX -->
-  <div class="sky-forecast" id="skyForecast">Loading sky forecast...</div>
 
   <script>
     const output = document.getElementById("terminal-output");
@@ -355,45 +342,6 @@
     imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
-
-    // Sky Forecast Script for Porterville
-    async function getSkyForecast() {
-      const portervilleLat = 36.0652;
-      const portervilleLon = -119.0168;
-      const forecastBox = document.getElementById("skyForecast");
-
-      try {
-        const now = new Date();
-        const todayISO = now.toISOString().split("T")[0];
-
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${portervilleLat}&longitude=${portervilleLon}&hourly=cloudcover&timezone=America%2FLos_Angeles&start_date=${todayISO}&end_date=${todayISO}`;
-
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const hours = data.hourly.time;
-        const clouds = data.hourly.cloudcover;
-
-        const hourIndex = hours.findIndex(t => t.includes("21:00")); // 9PM
-        const cloudPercent = clouds[hourIndex];
-
-        let message = "";
-        if (cloudPercent < 30) {
-          message = `✨ Tonight: Mostly Clear (${cloudPercent}% cloud cover)`;
-        } else if (cloudPercent < 70) {
-          message = `🌤️ Tonight: Partly Cloudy (${cloudPercent}%)`;
-        } else {
-          message = `☁️ Tonight: Cloudy (${cloudPercent}%)`;
-        }
-
-        forecastBox.textContent = message;
-      } catch (err) {
-        console.error("Error fetching forecast:", err);
-        forecastBox.textContent = "Unable to load sky forecast.";
-      }
-    }
-
-    getSkyForecast();
   </script>
 </body>
 </html>
