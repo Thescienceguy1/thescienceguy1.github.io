@@ -55,30 +55,118 @@
 
     .page-layout {
       display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px;
-      margin: 0 auto; padding: 24px; align-items: center;
+      margin: 0 auto; padding: 24px; align-items: start;
     }
-    .sidebar { display: flex; flex-direction: column; gap: 40px; align-items: center; }
+
+    /* Left column */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+
+    /* Moon widget sits above the cards */
+    .widget {
+      background: #0b1220;
+      border: 1px solid #0ea5e933;
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .widget h3 {
+      font-size: 1.05rem;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+    .widget small { color: #94a3b8; }
+
+    .moon-wrap { display: grid; grid-template-columns: 86px 1fr; gap: 14px; align-items: center; }
+    .moon-canvas {
+      width: 86px; height: 86px;
+      border-radius: 9999px;
+      border: 1px solid #0ea5e933;
+      background: radial-gradient(circle at 35% 35%, #1f2937 0%, #0b1220 70%);
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.5);
+    }
+    .moon-stats { font-size: 0.95rem; color: #cbd5e1; line-height: 1.35; }
+
+    .cards { display: flex; flex-direction: column; gap: 16px; }
 
     .card-link {
       display: block; text-decoration: none; background: #0b1220; border: 1px solid #0ea5e933;
-      color: #e2e8f0; padding: 18px; border-radius: 16px; width: 100%; max-width: 520px;
+      color: #e2e8f0; padding: 18px; border-radius: 16px; width: 100%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .card-link:hover { transform: translateY(-2px); box-shadow: 0 0 20px 6px #38bdf833; border-color: #38bdf8; }
-    .card-link h2 { font-size: 1.4rem; margin-bottom: 6px; color: #f1f5f9; }
-    .card-link p { color: #cbd5e1; font-size: 0.98rem; }
+    .card-link h2 { font-size: 1.2rem; margin-bottom: 6px; color: #f1f5f9; }
+    .card-link p { color: #cbd5e1; font-size: 0.96rem; }
 
-    .image-wrap { position: relative; display: grid; grid-template-rows: 1fr 1fr; gap: 24px; height: 100%; }
-    .image { width: 100%; height: 280px; object-fit: cover; border-radius: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); border: 1px solid #0ea5e933; transition: transform 0.35s ease, filter 0.35s ease; }
-    .image:hover { transform: scale(1.02); filter: brightness(1.06); }
+    /* Right column */
+    .right-col { display: grid; grid-template-rows: auto auto; gap: 16px; }
+    .image-wrap { position: relative; display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
+    .image {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      border: 1px solid #0ea5e933;
+      transition: transform 0.35s ease, filter 0.35s ease;
+      background: linear-gradient(145deg, #0b1220, #111827);
+    }
+    .image:hover { transform: scale(1.015); filter: brightness(1.06); }
+    .image[ data-fallback="1" ] {
+      display: grid; place-items: center; color: #94a3b8; font-size: 0.9rem; padding: 12px;
+    }
+
+    /* ISS tracker widget */
+    .iss-widget {
+      background: #0b1220;
+      border: 1px solid #0ea5e933;
+      border-radius: 16px;
+      padding: 12px 12px 16px 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .iss-head {
+      display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px;
+    }
+    .iss-head h3 { font-size: 1.05rem; color: #f1f5f9; }
+    .iss-stats { font-size: 0.9rem; color: #94a3b8; }
+
+    .iss-map {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #0ea5e933;
+      background: #0b1220;
+    }
+    .iss-map img {
+      width: 100%; height: 100%; object-fit: cover; display: block; filter: contrast(1.05) brightness(0.95);
+    }
+    .iss-dot {
+      position: absolute;
+      width: 14px; height: 14px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, #38bdf8 0%, #22d3ee 55%, rgba(56,189,248,0.0) 70%);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 18px rgba(56,189,248,0.8);
+      border: 1px solid #38bdf8aa;
+    }
 
     .shape { position: absolute; border-radius: 9999px; opacity: 0.15; filter: blur(24px); pointer-events: none; }
     .shape.one { width: 240px; height: 240px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); top: -40px; right: -20px; }
     .shape.two { width: 260px; height: 260px; background: radial-gradient(circle at 60% 60%, #22d3ee, transparent 65%); bottom: -30px; left: -30px; }
 
     footer { text-align: center; padding: 24px; color: #94a3b8; margin-top: 32px; }
-    @media (max-width: 1024px) { .page-layout { grid-template-columns: 1fr; } .image-wrap { grid-template-rows: 240px 240px; } }
+
+    @media (max-width: 1024px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .image-wrap { grid-template-rows: 240px 240px; }
+    }
+
+    /* Sparkle hover effect referenced in your JS */
+    @keyframes sparklePulse { 0%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} 50%{ box-shadow: 0 0 28px rgba(56,189,248,0.35);} 100%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} }
+    .sparkle { animation: sparklePulse 0.9s ease; }
 
     /* ===== Hacker intro overlay (short, cooler, runs once via localStorage) ===== */
     #boot-screen {
@@ -97,7 +185,6 @@
       box-shadow: 0 10px 40px rgba(0,0,0,.6), inset 0 0 0 1px #0b1220;
       position: relative; overflow: hidden;
     }
-    /* scanline */
     #boot-frame::after {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background: repeating-linear-gradient(
@@ -124,7 +211,7 @@
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- Hacker intro overlay (runs once; hold Alt while loading to force show) -->
+  <!-- Hacker intro overlay (runs once; add ?boot=1 to force show) -->
   <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading" style="display:none">
     <div id="boot-wrap">
       <div class="boot-title">retroskies://system/init</div>
@@ -146,17 +233,53 @@
   </header>
 
   <div class="page-layout">
-    <div class="sidebar">
-      <a href="about.html" class="card-link"><h2>About</h2><p>Learn more about who I am, my background, and what drives my passion for engineering and discovery.</p></a>
-      <a href="projects.html" class="card-link"><h2>Projects</h2><p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p></a>
-      <a href="logs.html" class="card-link"><h2>Observing Logs</h2><p>Nightly notes, flare events, and telescope captures from my observation sessions.</p></a>
-      <a href="messier_catalogue_full.html" class="card-link"><h2>Messier Catalogue</h2><p>Quick reference for specs, parts, and notes. Search and filters included.</p></a>
-      <p style="margin-top: 20px; font-size: 0.9em; text-align: center;"><a href="secret.html" style="color: #475569; text-decoration: none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#475569'">[access terminal]</a></p>
-    </div>
+    <!-- LEFT: Moon + Cards -->
+    <aside class="sidebar">
+      <!-- Moon Phase widget -->
+      <section class="widget">
+        <h3>Moon Phase</h3>
+        <div class="moon-wrap">
+          <canvas id="moonCanvas" class="moon-canvas" width="86" height="86" aria-label="Moon phase"></canvas>
+          <div class="moon-stats">
+            <div id="moonLabel">Loading...</div>
+            <small id="moonExtra"></small>
+          </div>
+        </div>
+      </section>
 
-    <div class="image-wrap">
-      <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image" id="imgTop" />
-      <img loading="lazy" src="observatory-night.jpg" alt="Night sky with observatory dome and stars" class="image" id="imgBottom" />
+      <!-- Cards -->
+      <div class="cards">
+        <a href="about.html" class="card-link"><h2>About</h2><p>Learn more about who I am, my background, and what drives my passion for engineering and discovery.</p></a>
+        <a href="projects.html" class="card-link"><h2>Projects</h2><p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p></a>
+        <a href="logs.html" class="card-link"><h2>Observing Logs</h2><p>Nightly notes, flare events, and telescope captures from my observation sessions.</p></a>
+        <a href="messier_catalogue_full.html" class="card-link"><h2>Messier Catalogue</h2><p>Quick reference for specs, parts, and notes. Search and filters included.</p></a>
+        <p style="margin-top: 6px; font-size: 0.9em; text-align: center;">
+          <a href="secret.html" style="color: #475569; text-decoration: none;"
+             onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#475569'">[access terminal]</a>
+        </p>
+      </div>
+    </aside>
+
+    <!-- RIGHT: Images + ISS widget -->
+    <div class="right-col">
+      <div class="image-wrap">
+        <img loading="lazy" src="robot-cad.png" alt="3D CAD model of a robotics project" class="image" id="imgTop" />
+        <img loading="lazy" src="observatory-night.jpg" alt="Night sky with observatory dome and stars" class="image" id="imgBottom" />
+      </div>
+
+      <section class="iss-widget" aria-live="polite">
+        <div class="iss-head">
+          <h3>ISS Tracker</h3>
+          <div class="iss-stats" id="issStats">Fetching position...</div>
+        </div>
+        <div class="iss-map" id="issMap">
+          <!-- Public domain world map from Wikimedia -->
+          <img id="worldImg"
+               alt="World map"
+               src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Equirectangular_projection_SW.jpg/1280px-Equirectangular_projection_SW.jpg">
+          <div class="iss-dot" id="issDot" style="left: 50%; top: 50%;"></div>
+        </div>
+      </section>
     </div>
 
     <div class="shape one"></div>
@@ -166,18 +289,157 @@
   <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
 
   <script>
-    // Cursor glow movement (unchanged)
+    // Cursor glow movement
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
+    // Image graceful fallback if local files are missing
+    function attachImageFallback(img, label){
+      img.addEventListener('error', () => {
+        img.setAttribute('data-fallback', '1');
+        img.removeAttribute('src');
+        img.textContent = label + " image not found";
+      }, { once: true });
+    }
     const imgTop = document.getElementById("imgTop");
     const imgBottom = document.getElementById("imgBottom");
+    attachImageFallback(imgTop, "Robot CAD");
+    attachImageFallback(imgBottom, "Observatory night");
+
+    // Small sparkle pulse on hover
     imgTop.addEventListener("mouseenter", () => imgTop.classList.add("sparkle"));
     imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
+  </script>
+
+  <!-- Moon Phase (local calculation, no external calls) -->
+  <script>
+    // Simple moon phase calc adapted from common approximations
+    (function(){
+      const canvas = document.getElementById('moonCanvas');
+      const ctx = canvas.getContext('2d');
+      const label = document.getElementById('moonLabel');
+      const extra = document.getElementById('moonExtra');
+
+      function moonPhaseData(date = new Date()){
+        // Meeus-style approximation
+        const synodic = 29.530588853; // days
+        const knownNew = Date.UTC(2000, 0, 6, 18, 14); // near known new moon
+        const days = (Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - knownNew) / 86400000;
+        let phase = (days % synodic + synodic) % synodic;
+        const illumination = (1 - Math.cos(2 * Math.PI * phase / synodic)) / 2; // 0..1
+        // Label
+        const pct = Math.round(illumination * 100);
+        let name = "Waxing Crescent";
+        if (phase < 1.0) name = "New Moon";
+        else if (phase < 7.4) name = "Waxing Crescent";
+        else if (phase < 8.6) name = "First Quarter";
+        else if (phase < 14.7) name = "Waxing Gibbous";
+        else if (phase < 15.9) name = "Full Moon";
+        else if (phase < 22.1) name = "Waning Gibbous";
+        else if (phase < 23.5) name = "Last Quarter";
+        else if (phase < 29.0) name = "Waning Crescent";
+        else name = "New Moon";
+        return { pct, name, phase };
+      }
+
+      function drawMoon(illum){
+        const w = canvas.width, h = canvas.height;
+        const r = w/2 - 4, cx = w/2, cy = h/2;
+        ctx.clearRect(0,0,w,h);
+
+        // Dark disk
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.fillStyle = '#0b0f1a';
+        ctx.fill();
+
+        // Terminator shape
+        const waxing = illum >= 0.5 ? true : false;
+        const k = Math.abs(2*illum - 1); // 0..1
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.clip();
+
+        ctx.fillStyle = '#e5e7eb';
+        ctx.beginPath();
+        // Ellipse width responds to illumination
+        const rx = r * (1 - k);
+        ctx.ellipse(cx + (waxing ? r*k/2 : -r*k/2), cy, rx, r, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        // Subtle rim light
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(56,189,248,0.35)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      function update(){
+        const { pct, name } = moonPhaseData(new Date());
+        label.textContent = `${name}`;
+        extra.textContent = `${pct}% illuminated`;
+        drawMoon(pct/100);
+      }
+      update();
+    })();
+  </script>
+
+  <!-- ISS Tracker using public API -->
+  <script>
+    (function(){
+      const statsEl = document.getElementById('issStats');
+      const dot = document.getElementById('issDot');
+      const map = document.getElementById('issMap');
+      const worldImg = document.getElementById('worldImg');
+
+      function latLonToXY(lat, lon, w, h){
+        const x = (lon + 180) / 360 * w;
+        const y = (90 - lat) / 180 * h;
+        return { x, y };
+      }
+
+      async function fetchISS(){
+        try {
+          const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544', { cache: 'no-store' });
+          if (!res.ok) throw new Error('Network response not ok');
+          const data = await res.json();
+          const lat = data.latitude;
+          const lon = data.longitude;
+          const vel = data.velocity; // km/h
+          const alt = data.altitude; // km
+
+          statsEl.textContent = `Lat ${lat.toFixed(2)}°, Lon ${lon.toFixed(2)}° | Alt ${alt.toFixed(0)} km | ${vel.toFixed(0)} km/h`;
+
+          const rect = map.getBoundingClientRect();
+          // Use actual rendered size for precise placement
+          const w = map.clientWidth;
+          const h = map.clientHeight;
+          const { x, y } = latLonToXY(lat, lon, w, h);
+          dot.style.left = x + 'px';
+          dot.style.top = y + 'px';
+        } catch (e) {
+          statsEl.textContent = 'Unable to fetch ISS position';
+        }
+      }
+
+      function start(){
+        fetchISS();
+        setInterval(fetchISS, 5000);
+      }
+
+      if (worldImg.complete) start();
+      else worldImg.addEventListener('load', start, { once: true });
+
+      // Reposition on resize
+      window.addEventListener('resize', fetchISS);
+    })();
   </script>
 
   <!-- Short, cooler hacker intro (4s total; uses localStorage to show once) -->
@@ -185,25 +447,18 @@
     (function(){
       const BOOT_KEY = "retroskiesBootSeen";
       const FORCE_PARAM = new URLSearchParams(location.search).get("boot");
-      const forceShow = FORCE_PARAM === "1" || (window.event && window.event.altKey); // simple backdoor; or add ?boot=1
+      const forceShow = FORCE_PARAM === "1";
       const hasSeen = localStorage.getItem(BOOT_KEY) === "1";
 
       const boot = document.getElementById("boot-screen");
       const logEl = document.getElementById("boot-log");
       const bar = document.getElementById("boot-bar");
-
       if (!boot || !logEl || !bar) return;
 
-      // If already seen and not forcing, skip instantly
-      if (hasSeen && !forceShow) {
-        boot.remove(); // no overlay
-        return;
-      }
+      if (hasSeen && !forceShow) { boot.remove(); return; }
 
-      // Show overlay
       boot.style.display = "grid";
 
-      // Cooler lines + emoji-free retro tone
       const lines = [
         "[ INIT ] Initializing systems",
         "[ LOAD ] Retro computer kernel",
@@ -215,13 +470,11 @@
         "[ READY ] Launch parameters confirmed"
       ];
 
-      const MIN_DURATION = 4000; // ms total target
+      const MIN_DURATION = 4000;
       const startTime = performance.now();
-
-      const baseCharDelay = 12;   // ms per char
-      const jitter = 8;           // ms random
-      const lineGap = 65;         // ms between lines
-
+      const baseCharDelay = 12;
+      const jitter = 8;
+      const lineGap = 65;
       let i = 0, ci = 0, pct = 0, targetPct = 0, rafId;
 
       function easeProgress(){
@@ -230,13 +483,11 @@
         bar.style.width = pct.toFixed(2) + "%";
         rafId = requestAnimationFrame(easeProgress);
       }
-
       function setTargetProgress(){
         const linePortion = i / lines.length;
         const charPortion = ci / Math.max(1, lines[i]?.length || 1);
         targetPct = Math.min(100, 5 + (linePortion * 90) + (charPortion * (90 / lines.length)));
       }
-
       function typeChar(){
         if (i >= lines.length){ finish(); return; }
         const line = lines[i];
@@ -253,23 +504,17 @@
           setTimeout(typeChar, lineGap);
         }
       }
-
       function finish(){
         targetPct = 100;
         const elapsed = performance.now() - startTime;
         const remaining = Math.max(0, MIN_DURATION - elapsed);
-
         setTimeout(() => {
           cancelAnimationFrame(rafId);
           boot.classList.add("hidden");
-          // mark as seen so it won't show again
           try { localStorage.setItem(BOOT_KEY, "1"); } catch (e) {}
-          // optional: remove from DOM after fade
           setTimeout(() => boot.remove(), 500);
         }, remaining);
       }
-
-      // Start typing
       setTimeout(() => {
         logEl.textContent = "";
         easeProgress();
