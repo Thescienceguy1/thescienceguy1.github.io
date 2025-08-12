@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Messier Catalogue | Isaac Ceballos</title>
   <style>
-    :root { --stick-top: 72px; } /* updated by JS */
-
     html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: monospace; background: linear-gradient(180deg, #0f172a 0%, #000000 100%); color: #f1f5f9; overflow-x: hidden; position: relative; min-height: 100vh; }
@@ -42,24 +40,21 @@
     .season { margin-top: 18px; background: #0b1220; border: 1px solid #0ea5e933; border-radius: 16px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
     .season h3 { margin-bottom: 10px; font-size: 1.4rem; }
 
-    /* horizontal scroll wrapper + spacer so sticky head doesn't cover first row */
+    /* horizontal scroll wrapper (no sticky spacer needed) */
     .table-wrap{
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       border-radius: 12px;
       border: 1px solid #0f2440;
-      padding-top: var(--head-h, 0px); /* set per table by JS */
       background: transparent;
     }
 
     table.messier-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 720px; }
+    /* NOT STICKY: let the header be a normal row */
     .messier-table thead th {
-      position: sticky;
-      top: var(--stick-top);       /* dynamic: matches actual header height */
+      position: static;         /* important: no sticky */
       background: #0b1326;
-      z-index: 5;                  /* above rows */
       color: #93c5fd;
-      box-shadow: 0 2px 0 #0f2440;
     }
     .messier-table th, .messier-table td { border-bottom: 1px solid #0f2440; padding: 10px 12px; text-align: left; white-space: nowrap; }
     .messier-table tr:hover { background: #0c1730; }
@@ -102,7 +97,6 @@
         <p>Reference hub for deep sky objects</p>
       </div>
     </div>
-    <!-- RESTORED SUBPAGE LINK -->
     <nav class="top-nav" aria-label="Subpages">
       <a href="messier-gallery.html">Messier Gallery ↗</a>
     </nav>
@@ -129,7 +123,7 @@
       <div class="table-wrap">
         <table class="dataframe messier-table">
           <thead>
-            <tr style="text-align: right;">
+            <tr>
               <th>Mnum</th><th>NGC</th><th>Type</th><th>Mag</th><th>Size</th><th>Distance</th><th>RA</th><th>Dec</th><th>Con</th><th>Name</th>
             </tr>
           </thead>
@@ -163,7 +157,7 @@
       <div class="table-wrap">
         <table class="dataframe messier-table">
           <thead>
-            <tr style="text-align: right;">
+            <tr>
               <th>Mnum</th><th>NGC</th><th>Type</th><th>Mag</th><th>Size</th><th>Distance</th><th>RA</th><th>Dec</th><th>Con</th><th>Name</th>
             </tr>
           </thead>
@@ -217,7 +211,7 @@
       <div class="table-wrap">
         <table class="dataframe messier-table">
           <thead>
-            <tr style="text-align: right;">
+            <tr>
               <th>Mnum</th><th>NGC</th><th>Type</th><th>Mag</th><th>Size</th><th>Distance</th><th>RA</th><th>Dec</th><th>Con</th><th>Name</th>
             </tr>
           </thead>
@@ -273,7 +267,7 @@
       <div class="table-wrap">
         <table class="dataframe messier-table">
           <thead>
-            <tr style="text-align: right;">
+            <tr>
               <th>Mnum</th><th>NGC</th><th>Type</th><th>Mag</th><th>Size</th><th>Distance</th><th>RA</th><th>Dec</th><th>Con</th><th>Name</th>
             </tr>
           </thead>
@@ -306,34 +300,6 @@
       const glow = document.getElementById("glow");
       if (glow) glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
-
-    // keep sticky table header exactly below the site header
-    function setStickTop(){
-      const header = document.querySelector('header');
-      const h = header ? Math.round(header.getBoundingClientRect().height) : 72;
-      document.documentElement.style.setProperty('--stick-top', h + 'px');
-    }
-
-    // measure each table header and reserve that much space above the table,
-    // so the sticky header never sits on top of the first data row.
-    function setTableHeadHeights(){
-      document.querySelectorAll('.table-wrap').forEach(wrap => {
-        const thead = wrap.querySelector('thead');
-        if (!thead) return;
-        const headH = Math.round(thead.getBoundingClientRect().height) || 36;
-        wrap.style.setProperty('--head-h', headH + 'px');
-      });
-    }
-
-    window.addEventListener('load', () => {
-      setStickTop();
-      setTableHeadHeights();
-      setTimeout(setTableHeadHeights, 200); // re-measure after fonts render
-    });
-    window.addEventListener('resize', () => {
-      setStickTop();
-      setTableHeadHeights();
-    }, { passive: true });
   </script>
 </body>
 </html>
