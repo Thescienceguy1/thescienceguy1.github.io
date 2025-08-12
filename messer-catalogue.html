@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messer Catalogue | Isaac Ceballos</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Background stars, same as index */
+    .starscape {
+      position: fixed;
+      inset: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.08;
+      z-index: -2;
+      pointer-events: none;
+    }
+    .starscape::after {
+      content: "";
+      position: absolute; inset: 0;
+      backdrop-filter: blur(1px);
+      background: rgba(0,0,0,0.1);
+    }
+
+    /* Cursor glow, same feel as index */
+    .glow {
+      position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none; z-index: 1000; mix-blend-mode: overlay;
+      transition: transform 0.05s ease;
+    }
+
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px; background: #1e293b; flex-wrap: wrap; z-index: 1;
+      position: sticky; top: 0; border-bottom: 1px solid #0b1220;
+    }
+    .logo { display: flex; align-items: center; }
+    header img { width: 60px; margin-right: 16px; border-radius: 8px; }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    header p { margin: 4px 0; font-size: 1rem; color: #94a3b8; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    .breadcrumb { margin: 8px 0 16px; font-size: 0.95rem; color: #94a3b8; }
+    .breadcrumb a { color: #38bdf8; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    .hero { margin: 8px 0 24px; }
+    .hero h2 { font-size: 2.2rem; margin-bottom: 8px; }
+    .hero p { color: #cbd5e1; max-width: 800px; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 180px 180px 140px;
+      gap: 12px; margin: 20px 0 28px;
+      position: sticky; top: 82px; /* below header */
+      background: rgba(2, 6, 23, 0.6);
+      padding: 12px; border-radius: 12px; backdrop-filter: blur(6px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .controls input, .controls select, .controls button {
+      padding: 10px 12px; border-radius: 10px; border: 1px solid #334155;
+      background: #0b1220; color: #e2e8f0; outline: none;
+    }
+    .controls input::placeholder { color: #64748b; }
+    .controls button {
+      background-color: #38bdf8; color: #0f172a; border: none; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: background-color .2s, transform .1s, box-shadow .2s;
+    }
+    .controls button:hover { background-color: #0ea5e9; color: #f1f5f9; box-shadow: 0 0 18px 4px #0ea5e9; }
+    .controls button:active { transform: translateY(1px); }
+
+    .grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .item-card {
+      grid-column: span 4; /* 3 per row on desktop */
+      background: #0b1220; border: 1px solid #0ea5e933; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .item-card:hover { transform: translateY(-2px); box-shadow: 0 0 20px 6px #38bdf833; }
+    .thumb { height: 160px; background: linear-gradient(135deg, #1f2937, #0b1220); }
+    .content { padding: 14px; }
+    .content h3 { font-size: 1.2rem; margin-bottom: 6px; }
+    .meta { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
+    .desc { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 12px; }
+    .card-actions { display: flex; gap: 8px; }
+    .btn {
+      display: inline-block; padding: 10px 12px; border-radius: 10px; text-decoration: none;
+      background: #38bdf8; color: #0f172a; font-weight: 700; border: none; cursor: pointer;
+      transition: background-color .2s, transform .1s, box-shadow .2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .btn:hover { background: #0ea5e9; color: #f1f5f9; box-shadow: 0 0 18px 4px #0ea5e9; }
+
+    footer { text-align: center; padding: 24px; color: #94a3b8; margin-top: 32px; }
+
+    @media (max-width: 1024px) {
+      .item-card { grid-column: span 6; }
+      .controls { grid-template-columns: 1fr 1fr 1fr; }
+      .controls button { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      header img { width: 56px; }
+      header h1 { font-size: 1.4rem; }
+      .item-card { grid-column: span 12; }
+      .controls { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="starscape"></div>
+  <div class="glow" id="glow"></div>
+
+  <header>
+    <div class="logo">
+      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <div>
+        <h1>Messer Catalogue</h1>
+        <p>Reference hub for specs, parts, and notes</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb">← <a href="index.html">Back to Home</a></nav>
+
+    <section class="hero">
+      <h2>Browse and filter items</h2>
+      <p>This page is a scaffold. We will plug in real data next. Search and filters are wired for demo so you can see the flow.</p>
+    </section>
+
+    <section class="controls" aria-label="Filters">
+      <input id="q" type="search" placeholder="Search by name or keywords" />
+      <select id="brand">
+        <option value="">Brand</option>
+        <option value="Messer">Messer</option>
+        <option value="OtherCo">OtherCo</option>
+      </select>
+      <select id="type">
+        <option value="">Type</option>
+        <option value="Knife">Knife</option>
+        <option value="Tool">Tool</option>
+        <option value="Part">Part</option>
+      </select>
+      <button id="clear">Clear</button>
+    </section>
+
+    <section class="grid" id="grid">
+      <!-- Sample items to show layout and filtering. Replace with real entries later. -->
+      <article class="item-card" data-brand="Messer" data-type="Knife" data-keywords="chef 8in stainless classic">
+        <div class="thumb" aria-hidden="true"></div>
+        <div class="content">
+          <h3>Messer Chef 8 in</h3>
+          <p class="meta">Brand: Messer • Type: Knife</p>
+          <p class="desc">Stainless steel chef knife. Placeholder copy to show how descriptions will look.</p>
+          <div class="card-actions">
+            <a class="btn" href="#">View details</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card" data-brand="Messer" data-type="Part" data-keywords="handle replacement g10 black">
+        <div class="thumb" aria-hidden="true"></div>
+        <div class="content">
+          <h3>G10 Handle Kit</h3>
+          <p class="meta">Brand: Messer • Type: Part</p>
+          <p class="desc">Replacement handle scales. Color and size options will go here later.</p>
+          <div class="card-actions">
+            <a class="btn" href="#">View details</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="item-card" data-brand="OtherCo" data-type="Tool" data-keywords="sharpener stone 1000 grit">
+        <div class="thumb" aria-hidden="true"></div>
+        <div class="content">
+          <h3>1000 Grit Stone</h3>
+          <p class="meta">Brand: OtherCo • Type: Tool</p>
+          <p class="desc">Water stone for sharpening. This is just a stand in example.</p>
+          <div class="card-actions">
+            <a class="btn" href="#">View details</a>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Isaac Ceballos. All rights reserved.
+  </footer>
+
+  <script>
+    // Glow follows cursor
+    document.addEventListener("mousemove", (e) => {
+      const glow = document.getElementById("glow");
+      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    // Simple client-side filtering demo
+    const q = document.getElementById('q');
+    const brand = document.getElementById('brand');
+    const type = document.getElementById('type');
+    const clearBtn = document.getElementById('clear');
+    const cards = Array.from(document.querySelectorAll('.item-card'));
+
+    function applyFilters() {
+      const text = q.value.trim().toLowerCase();
+      const b = brand.value;
+      const t = type.value;
+      cards.forEach(card => {
+        const matchesText = text === '' || card.dataset.keywords.toLowerCase().includes(text) || card.querySelector('h3').textContent.toLowerCase().includes(text);
+        const matchesBrand = !b || card.dataset.brand === b;
+        const matchesType = !t || card.dataset.type === t;
+        card.style.display = (matchesText && matchesBrand && matchesType) ? '' : 'none';
+      });
+    }
+
+    q.addEventListener('input', applyFilters);
+    brand.addEventListener('change', applyFilters);
+    type.addEventListener('change', applyFilters);
+    clearBtn.addEventListener('click', () => { q.value = ''; brand.value = ''; type.value = ''; applyFilters(); });
+
+    // Initial filter
+    applyFilters();
+  </script>
+</body>
+</html>
