@@ -98,7 +98,7 @@
     @keyframes sparklePulse { 0%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} 50%{ box-shadow: 0 0 28px rgba(56,189,248,0.35);} 100%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} }
     .sparkle { animation: sparklePulse 0.9s ease; }
 
-    /* ===== Hacker intro overlay (unchanged) ===== */
+    /* ===== Hacker intro overlay ===== */
     #boot-screen {
       position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
       background: radial-gradient(1200px 600px at 20% 10%, #0b1326 0%, #000 60%);
@@ -197,13 +197,13 @@
     sparkle("imgLeft"); sparkle("imgRight");
   </script>
 
-  <!-- Boot typing logic -->
+  <!-- Boot typing logic: once per browsing session -->
   <script>
     (function(){
-      const BOOT_KEY = "retroskiesBootSeen";
+      const BOOT_KEY = "retroskiesBootSeenSession";
       const FORCE_PARAM = new URLSearchParams(location.search).get("boot");
       const forceShow = FORCE_PARAM === "1";
-      const hasSeen = localStorage.getItem(BOOT_KEY) === "1";
+      const hasSeen = sessionStorage.getItem(BOOT_KEY) === "1";
 
       const boot = document.getElementById("boot-screen");
       const logEl = document.getElementById("boot-log");
@@ -229,22 +229,49 @@
       const baseCharDelay = 12, jitter = 8, lineGap = 65;
       let i = 0, ci = 0, pct = 0, targetPct = 0, rafId;
 
-      function easeProgress(){ pct += (targetPct - pct) * 0.18; if (pct > 100) pct = 100; bar.style.width = pct.toFixed(2) + "%"; rafId = requestAnimationFrame(easeProgress); }
-      function setTargetProgress(){ const lp = i / lines.length; const cp = ci / Math.max(1, lines[i]?.length || 1); targetPct = Math.min(100, 5 + (lp * 90) + (cp * (90 / lines.length))); }
+      function easeProgress(){
+        pct += (targetPct - pct) * 0.18;
+        if (pct > 100) pct = 100;
+        bar.style.width = pct.toFixed(2) + "%";
+        rafId = requestAnimationFrame(easeProgress);
+      }
+      function setTargetProgress(){
+        const lp = i / lines.length;
+        const cp = ci / Math.max(1, lines[i]?.length || 1);
+        targetPct = Math.min(100, 5 + (lp * 90) + (cp * (90 / lines.length)));
+      }
       function typeChar(){
         if (i >= lines.length){ finish(); return; }
         const line = lines[i];
         if (ci === 0){ logEl.textContent += "> "; }
-        if (ci < line.length){ logEl.textContent += line.charAt(ci); ci++; setTargetProgress(); logEl.scrollTop = logEl.scrollHeight; setTimeout(typeChar, baseCharDelay + Math.random()*jitter); }
-        else { logEl.textContent += "\n"; i++; ci = 0; setTimeout(typeChar, lineGap); }
+        if (ci < line.length){
+          logEl.textContent += line.charAt(ci);
+          ci++;
+          setTargetProgress();
+          logEl.scrollTop = logEl.scrollHeight;
+          setTimeout(typeChar, baseCharDelay + Math.random()*jitter);
+        } else {
+          logEl.textContent += "\n";
+          i++; ci = 0;
+          setTimeout(typeChar, lineGap);
+        }
       }
       function finish(){
         targetPct = 100;
         const elapsed = performance.now() - startTime;
         const remaining = Math.max(0, MIN_DURATION - elapsed);
-        setTimeout(() => { cancelAnimationFrame(rafId); boot.classList.add("hidden"); try { localStorage.setItem(BOOT_KEY, "1"); } catch(e){} setTimeout(() => boot.remove(), 500); }, remaining);
+        setTimeout(() => {
+          cancelAnimationFrame(rafId);
+          boot.classList.add("hidden");
+          try { sessionStorage.setItem(BOOT_KEY, "1"); } catch(e){}
+          setTimeout(() => boot.remove(), 500);
+        }, remaining);
       }
-      setTimeout(() => { logEl.textContent = ""; easeProgress(); typeChar(); }, 160);
+      setTimeout(() => {
+        logEl.textContent = "";
+        easeProgress();
+        typeChar();
+      }, 160);
     })();
   </script>
 </body>
