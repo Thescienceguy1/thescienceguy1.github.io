@@ -79,11 +79,29 @@
 
     footer { text-align: center; padding: 24px; color: #94a3b8; margin-top: 32px; }
     @media (max-width: 1024px) { .page-layout { grid-template-columns: 1fr; } .image-wrap { grid-template-rows: 240px 240px; } }
+
+    /* ===== Hacker intro overlay (minimal, non-invasive) ===== */
+    #boot-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000; color: #0f0; font-family: monospace;
+      padding: 20px; display: flex; flex-direction: column;
+      opacity: 1; transition: opacity .35s ease;
+    }
+    #boot-screen.hidden { opacity: 0; pointer-events: none; }
+    #boot-log { flex: 1; overflow-y: auto; white-space: pre-wrap; line-height: 1.35; }
+    #boot-progress { height: 6px; background: #003300; border: 1px solid #0f0; margin-top: 10px; }
+    #boot-bar { height: 100%; background: #0f0; width: 0%; transition: width .1s linear; }
   </style>
 </head>
 <body>
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
+
+  <!-- Hacker intro overlay -->
+  <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading">
+    <div id="boot-log"></div>
+    <div id="boot-progress"><div id="boot-bar"></div></div>
+  </div>
 
   <header>
     <div class="brand">
@@ -127,6 +145,68 @@
     imgTop.addEventListener("animationend", () => imgTop.classList.remove("sparkle"));
     imgBottom.addEventListener("mouseenter", () => imgBottom.classList.add("sparkle"));
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
+  </script>
+
+  <!-- Short, smooth hacker intro (no other changes) -->
+  <script>
+    (function(){
+      const logEl = document.getElementById('boot-log');
+      const bar = document.getElementById('boot-bar');
+      const boot = document.getElementById('boot-screen');
+      const lines = [
+        '[ OK ] Mounting Retroskies',
+        '[ OK ] Loading assets',
+        '[ OK ] Initializing UI',
+        'System ready.'
+      ];
+      const baseCharDelay = 12;  // ms
+      const jitter = 8;          // ms
+      const lineGap = 60;        // ms
+      let i = 0, ci = 0, pct = 0, targetPct = 0;
+
+      function easeProgress(){
+        pct += (targetPct - pct) * 0.2;
+        if (pct > 100) pct = 100;
+        bar.style.width = pct.toFixed(2) + '%';
+        requestAnimationFrame(easeProgress);
+      }
+
+      function setTargetProgress(){
+        const linePortion = i / lines.length;
+        const charPortion = ci / Math.max(1, lines[i]?.length || 1);
+        targetPct = Math.min(100, 5 + (linePortion * 90) + (charPortion * (90 / lines.length)));
+      }
+
+      function typeChar(){
+        if (i >= lines.length){ finish(); return; }
+        const line = lines[i];
+        if (ci === 0){ logEl.textContent += '> '; }
+        if (ci < line.length){
+          logEl.textContent += line.charAt(ci);
+          ci++;
+          setTargetProgress();
+          logEl.scrollTop = logEl.scrollHeight;
+          setTimeout(typeChar, baseCharDelay + Math.random()*jitter);
+        } else {
+          logEl.textContent += '\\n';
+          i++; ci = 0;
+          setTimeout(typeChar, lineGap);
+        }
+      }
+
+      function finish(){
+        targetPct = 100;
+        setTimeout(() => {
+          boot.classList.add('hidden'); // fade out
+        }, 250);
+      }
+
+      setTimeout(() => {
+        logEl.textContent = '';
+        easeProgress();
+        typeChar();
+      }, 150);
+    })();
   </script>
 </body>
 </html>
