@@ -15,6 +15,7 @@
       --subtle: #94a3b8;
       --accent: #38bdf8;
       --pad: 24px;
+      --stick-top: 72px; /* will be updated by JS to the actual header height */
     }
     html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,109 +24,109 @@
       background: linear-gradient(180deg, #0f172a 0%, #000 100%);
       color: var(--ink);
       overflow-x: hidden;
-      position: relative;
       min-height: 100vh;
     }
 
-    /* Background stars */
     .starscape { position: fixed; inset: 0; background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png'); background-size: cover; background-position: center; opacity: 0.08; z-index: -2; pointer-events: none; }
     .starscape::after { content: ""; position: absolute; inset: 0; backdrop-filter: blur(1px); background: rgba(0,0,0,0.1); }
     .glow { position: fixed; top: 0; left: 0; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%); pointer-events: none; z-index: 1000; mix-blend-mode: overlay; transition: transform 0.05s ease; }
 
-    /* Header */
-    header {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px var(--pad); background: var(--header-bg);
-      position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #0b1220;
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:16px var(--pad); background:var(--header-bg);
+      position:sticky; top:0; z-index:20; border-bottom:1px solid #0b1220;
     }
-    .logo { display: flex; align-items: center; min-width: 0; }
-    header img { width: 52px; height: 52px; margin-right: 12px; border-radius: 8px; flex: 0 0 auto; }
-    header h1 { margin: 0; font-size: 1.6rem; line-height: 1.1; }
-    header p { margin: 2px 0 0; font-size: 0.95rem; color: var(--subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .logo{ display:flex; align-items:center; min-width:0; }
+    header img{ width:52px; height:52px; margin-right:12px; border-radius:8px; flex:0 0 auto; }
+    header h1{ font-size:1.6rem; line-height:1.1; }
+    header p{ margin-top:2px; font-size:.95rem; color:var(--subtle); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    .top-nav a {
-      display: inline-block; text-decoration: none; color: #e2e8f0;
-      background: var(--card-bg); border: 1px solid #334155; padding: 10px 14px; border-radius: 12px; font-weight: 700;
+    .top-nav a{
+      display:inline-block; text-decoration:none; color:#e2e8f0;
+      background:var(--card-bg); border:1px solid #334155; padding:10px 14px; border-radius:12px; font-weight:700;
     }
-    .top-nav a:hover { border-color: var(--accent); box-shadow: 0 0 16px #38bdf822; color: #f8fafc; }
+    .top-nav a:hover{ border-color:var(--accent); box-shadow:0 0 16px #38bdf822; }
 
-    /* Layout */
-    .container { max-width: var(--page-max); margin: 0 auto; padding: var(--pad); }
-    .breadcrumb { margin: 8px 0 16px; font-size: 0.95rem; color: var(--subtle); }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .breadcrumb a:hover { text-decoration: underline; }
+    .container{ max-width:var(--page-max); margin:0 auto; padding:var(--pad); }
+    .breadcrumb{ margin:8px 0 16px; font-size:.95rem; color:var(--subtle); }
+    .breadcrumb a{ color:var(--accent); text-decoration:none; }
+    .breadcrumb a:hover{ text-decoration:underline; }
 
-    .hero h2 { font-size: 2rem; margin-bottom: 8px; }
-    .hero p { color: #cbd5e1; }
+    .hero h2{ font-size:2rem; margin-bottom:8px; }
+    .hero p{ color:#cbd5e1; }
 
-    .cta {
-      display: inline-block; margin-top: 14px; padding: 10px 14px;
-      border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg);
-      color: #e2e8f0; text-decoration: none; font-weight: 700;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    .cta{
+      display:inline-block; margin-top:14px; padding:10px 14px;
+      border-radius:12px; border:1px solid var(--border); background:var(--card-bg);
+      color:#e2e8f0; text-decoration:none; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,.35);
     }
-    .cta:hover { border-color: var(--accent); box-shadow: 0 0 18px #38bdf822; }
+    .cta:hover{ border-color:var(--accent); box-shadow:0 0 18px #38bdf822; }
 
-    .season-nav { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
-    .season-nav a { padding: 10px 14px; border-radius: 12px; background: var(--card-bg); color: #e2e8f0; text-decoration: none; border: 1px solid #334155; font-weight: 700; }
-    .season-nav a:hover { border-color: var(--accent); box-shadow: 0 0 16px #38bdf822; }
+    .season-nav{ display:flex; gap:10px; flex-wrap:wrap; margin:18px 0; }
+    .season-nav a{ padding:10px 14px; border-radius:12px; background:var(--card-bg); color:#e2e8f0; text-decoration:none; border:1px solid #334155; font-weight:700; }
+    .season-nav a:hover{ border-color:var(--accent); box-shadow:0 0 16px #38bdf822; }
 
-    .season {
-      margin-top: 18px; background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: var(--card-br); padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    .season{
+      margin-top:18px; background:var(--card-bg); border:1px solid var(--border);
+      border-radius:var(--card-br); padding:14px; box-shadow:0 4px 12px rgba(0,0,0,.35);
+      scroll-margin-top: calc(var(--stick-top) + 12px); /* anchor links land below header */
     }
-    .season h3 { margin-bottom: 10px; font-size: 1.3rem; }
+    .season h3{ margin-bottom:10px; font-size:1.3rem; }
 
-    /* Responsive table scaffold */
     .table-wrap{
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
-      border-radius: 12px; border: 1px solid #0f2440;
-      background: linear-gradient(180deg, rgba(56,189,248,.05), transparent 60%);
+      overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch;
+      border-radius:12px; border:1px solid #0f2440; background:linear-gradient(180deg, rgba(56,189,248,.05), transparent 60%);
     }
 
-    table.messier-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 720px; }
-    .messier-table thead th {
-      position: sticky; top: var(--stick-top, 82px); background: #0b1326; z-index: 2;
+    /* IMPORTANT: use separate + spacing to fix sticky header glitches */
+    table.messier-table{
+      width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed;
+      font-size:.95rem; min-width:720px;
     }
-    .messier-table th, .messier-table td { border-bottom: 1px solid #0f2440; padding: 10px 12px; text-align: left; white-space: nowrap; }
-    .messier-table tr:hover { background: #0c1730; }
-    .messier-table th { color: #93c5fd; }
-    .messier-table td { color: #cbd5e1; }
+    .messier-table thead th{
+      position:sticky; top:var(--stick-top); background:#0b1326;
+      z-index:3; /* sit above rows */
+      box-shadow: 0 2px 0 #0f2440; /* visual divider when stuck */
+    }
+    .messier-table th, .messier-table td{
+      border-bottom:1px solid #0f2440; padding:10px 12px; text-align:left; white-space:nowrap;
+    }
+    .messier-table tr:hover{ background:#0c1730; }
+    .messier-table th{ color:#93c5fd; }
+    .messier-table td{ color:#cbd5e1; }
 
-    footer { text-align: center; padding: 24px; color: var(--subtle); }
+    footer{ text-align:center; padding:24px; color:var(--subtle); }
 
     /* ===== Mobile tweaks ===== */
     @media (max-width: 840px){
-      header h1 { font-size: 1.35rem; }
-      header img { width: 46px; height: 46px; }
-      .hero h2 { font-size: 1.6rem; }
-      .container { padding: 18px; }
-      .season { padding: 12px; }
-      table.messier-table { font-size: 0.92rem; min-width: 680px; }
-      .season-nav { gap: 8px; }
-      .season-nav a { padding: 8px 12px; border-radius: 10px; }
+      header h1{ font-size:1.35rem; }
+      header img{ width:46px; height:46px; }
+      .hero h2{ font-size:1.6rem; }
+      .container{ padding:18px; }
+      .season{ padding:12px; }
+      table.messier-table{ font-size:.92rem; min-width:680px; }
+      .season-nav{ gap:8px; }
+      .season-nav a{ padding:8px 12px; border-radius:10px; }
     }
 
-    /* Phone: hide less-critical columns (Distance, RA, Dec) */
+    /* Phone compact mode: hide Distance, RA, Dec */
     @media (max-width: 640px){
-      :root{ --pad: 16px; }
-      .top-nav a{ padding: 8px 12px; }
-      header p{ display:none; } /* save space */
-      table.messier-table { font-size: 0.9rem; min-width: 560px; }
+      :root{ --pad:16px; }
+      header p{ display:none; }
+      table.messier-table{ font-size:.9rem; min-width:560px; }
       .messier-table thead th:nth-child(6),
       .messier-table thead th:nth-child(7),
       .messier-table thead th:nth-child(8),
       .messier-table tbody td:nth-child(6),
       .messier-table tbody td:nth-child(7),
-      .messier-table tbody td:nth-child(8) { display: none; }
-      .messier-table th, .messier-table td { padding: 10px; }
+      .messier-table tbody td:nth-child(8){ display:none; }
+      .messier-table th, .messier-table td{ padding:10px; }
     }
 
-    /* Very small phones */
     @media (max-width: 400px){
-      header h1 { font-size: 1.15rem; }
-      .season h3 { font-size: 1.15rem; }
-      table.messier-table { font-size: 0.86rem; min-width: 520px; }
+      header h1{ font-size:1.15rem; }
+      .season h3{ font-size:1.15rem; }
+      table.messier-table{ font-size:.86rem; min-width:520px; }
     }
   </style>
 </head>
@@ -345,14 +346,14 @@
       const glow = document.getElementById("glow");
       if (glow) glow.style.transform = `translate(${e.clientX-20}px, ${e.clientY-20}px)`;
     });
-    // set sticky offset equal to header height (helps when header size changes on mobile)
-    const setStickTop = () => {
+    // compute sticky offset to match the actual header height
+    function setStickTop(){
       const header = document.querySelector('header');
-      const top = header ? header.getBoundingClientRect().height + 8 : 82;
-      document.documentElement.style.setProperty('--stick-top', `${top}px`);
-    };
-    window.addEventListener('resize', setStickTop, { passive:true });
+      const h = header ? Math.round(header.getBoundingClientRect().height) : 72;
+      document.documentElement.style.setProperty('--stick-top', (h + 6) + 'px');
+    }
     window.addEventListener('load', setStickTop);
+    window.addEventListener('resize', setStickTop, {passive:true});
   </script>
 </body>
 </html>
