@@ -15,55 +15,32 @@
       overflow-x: hidden;
       position: relative;
     }
-    /* BG */
-    .starscape{position:fixed;inset:0;background-image:url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');background-size:cover;background-position:center;opacity:.08;z-index:-2;pointer-events:none}
+    .starscape{
+      position:fixed;inset:0;
+      background-image:url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
+      background-size:cover;background-position:center;
+      opacity:.08;z-index:-2;pointer-events:none
+    }
     .starscape::after{content:"";position:absolute;inset:0;backdrop-filter:blur(1px);background:rgba(0,0,0,.1)}
     .glow{position:fixed;top:0;left:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);pointer-events:none;z-index:1000;mix-blend-mode:overlay;transition:transform .05s ease}
-
     header{
       display:flex;align-items:center;justify-content:space-between;gap:16px;
       padding:20px;background:#1e293b;position:sticky;top:0;border-bottom:1px solid #0b1220;z-index:10
     }
-    .brand{display:flex;align-items:center;gap:16px}
-    header img{width:64px;height:64px;border-radius:10px}
     header h1{font-size:1.8rem;margin:0}
     header p{color:#94a3b8}
-
-    /* Layout */
-    .wrap{max-width:1200px;margin:0 auto;padding:24px;display:grid;grid-template-columns:260px 1fr;gap:24px}
-    @media (max-width: 960px){ .wrap{grid-template-columns:1fr} .toc{position:static} }
-
-    .toc{
-      position:sticky;top:96px;align-self:start;background:#0b1220;border:1px solid #0ea5e933;
-      border-radius:16px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,.35)
-    }
-    .toc h3{font-size:1.05rem;margin-bottom:8px;color:#93c5fd}
-    .toc a{display:block;padding:8px 10px;border-radius:10px;color:#e2e8f0;text-decoration:none;border:1px solid transparent}
-    .toc a:hover{border-color:#38bdf8;background:#0c1730}
-
+    .wrap{max-width:1000px;margin:0 auto;padding:24px;}
     .section{
       background:#0b1220;border:1px solid #0ea5e933;border-radius:16px;padding:18px 20px;margin-bottom:16px;
       box-shadow:0 6px 16px rgba(0,0,0,.35)
     }
     .section h2{font-size:1.4rem;margin-bottom:8px;color:#38bdf8}
     .meta{color:#94a3b8;font-size:.95rem;margin-bottom:10px}
-
-    /* Figure frames / placeholders */
-    .frame{
-      position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
-      border:1px solid #0ea5e933;background:
-        radial-gradient(circle at 30% 20%, rgba(56,189,248,.14), transparent 40%),
-        linear-gradient(145deg,#0b1220,#111827)
+    .placeholder{
+      border:1px dashed #38bdf8;border-radius:10px;
+      padding:20px;text-align:center;color:#94a3b8;
+      margin-top:10px
     }
-    .frame img{width:100%;height:100%;object-fit:contain;background:#0b1220}
-    .frame .ph{
-      position:absolute;inset:0;display:grid;place-items:center;color:#94a3b8;
-      padding:8px;text-align:center;font-size:.95rem
-    }
-    .caption{color:#94a3b8;font-size:.92rem;margin-top:8px}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media (max-width: 900px){ .grid2{grid-template-columns:1fr} }
-
     footer{text-align:center;padding:24px;color:#94a3b8}
     .shape{position:absolute;border-radius:9999px;opacity:.15;filter:blur(24px);pointer-events:none}
     .shape.one{width:240px;height:240px;background:radial-gradient(circle at 30% 30%,#38bdf8,transparent 60%);top:-40px;right:-20px}
@@ -78,167 +55,65 @@
   <div class="glow" id="glow"></div>
 
   <header>
-    <div class="brand">
-      <img src="retroskies-logo.png" alt="Retroskies Lab Logo">
-      <div>
-        <h1>EV Lacertae – Stellar Flare Research</h1>
-        <p>Photometric monitoring & analysis of a flaring M‑dwarf</p>
-      </div>
+    <div>
+      <h1>EV Lacertae – Stellar Flare Research</h1>
+      <p>Photometric monitoring & analysis</p>
     </div>
     <nav>
       <a class="cta" href="index.html">Home</a>
-      <a class="cta" href="projects.html">Projects</a>
     </nav>
   </header>
 
   <main class="wrap">
-    <!-- Sidebar TOC -->
-    <aside class="toc" aria-label="On this page">
-      <h3>Contents</h3>
-      <a href="#overview">Overview</a>
-      <a href="#target">Target</a>
-      <a href="#methods">Methods</a>
-      <a href="#observations">Observation Log</a>
-      <a href="#reduction">Reduction & Photometry</a>
-      <a href="#results">Results (Light Curves)</a>
-      <a href="#discussion">Interpretation</a>
-      <a href="#references">References</a>
-    </aside>
+    <div class="section">
+      <h2>Overview</h2>
+      <div class="meta">Isaac Ceballos — Porterville College</div>
+      <p>EV Lacertae is a highly active M-dwarf star prone to rapid and energetic flare events. This project monitored the star over several nights to detect, measure, and analyze these flares using time-series photometry. The goal was to determine flare frequency, amplitude, and duration, and compare findings with existing studies.</p>
+    </div>
 
-    <!-- Main content -->
-    <section style="position:relative">
-      <div id="overview" class="section">
-        <h2>Overview</h2>
-        <div class="meta">Isaac Ceballos — Porterville College | Astrophysics REU — Dr. Michael Richmond</div>
-        <p>This project focuses on monitoring EV Lacertae for high‑energy stellar flares using time‑series photometry and building calibrated light curves to characterize flare amplitude and timescales.</p>
-        <ul>
-          <li>Objective: detect and measure flare events via differential photometry.</li>
-          <li>Deliverables: observing log, reduced data products, light curves, and flare metrics.</li>
-        </ul>
+    <div class="section">
+      <h2>Methods</h2>
+      <ul>
+        <li>Time-series imaging with consistent exposure and cadence</li>
+        <li>Calibration using bias, dark, and flat frames</li>
+        <li>Differential photometry with stable comparison stars</li>
+        <li>Light curve creation to identify and measure flare events</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Observations</h2>
+      <ul>
+        <li>Observed on multiple nights in June and July 2025</li>
+        <li>Exposure times and cadence chosen to balance SNR with flare detectability</li>
+        <li>Data processed in AstroImageJ</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Findings</h2>
+      <ul>
+        <li>Detected a confirmed flare on July 6, 2025</li>
+        <li>Flare amplitude and duration consistent with typical EV Lac flare profiles</li>
+        <li>Overall flare frequency lower than some literature values — possibly due to quiet magnetic cycle or observation window limits</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Light Curves</h2>
+      <p>Below is a placeholder for light curves from the PowerPoint. Replace this placeholder with actual curve images when ready.</p>
+      <div class="placeholder">
+        Light Curve Placeholder – Add PNGs later (e.g. <code>lightcurve-july6.png</code>)
       </div>
+    </div>
 
-      <div id="target" class="section">
-        <h2>Target: EV Lacertae</h2>
-        <p>EV Lac is an active M‑dwarf (red dwarf) well‑known for frequent magnetic reconnection flares that produce rapid brightness spikes. It’s a prime laboratory for stellar activity studies and space‑weather analogs.</p>
-        <div class="grid2">
-          <figure>
-            <div class="frame">
-              <!-- Drop a finder chart image here later -->
-              <!-- Save as: images/evlac/evlac-finder.png -->
-              <img src="images/evlac/evlac-finder.png" alt="EV Lac finder chart" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>images/evlac/evlac-finder.png</code></div>
-            </div>
-            <figcaption class="caption">Finder chart / field with labeled comparison stars for calibration.</figcaption>
-          </figure>
-          <figure>
-            <div class="frame">
-              <!-- Overview image (you already had one) -->
-              <img src="evlac-overview.png" alt="EV Lac overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>evlac-overview.png</code></div>
-            </div>
-            <figcaption class="caption">Overview frame used for planning and star ID.</figcaption>
-          </figure>
-        </div>
-      </div>
-
-      <div id="methods" class="section">
-        <h2>Methods</h2>
-        <ul>
-          <li>Time‑series imaging with consistent cadence (exposure & interval tuned for flare capture).</li>
-          <li>Calibration frames (bias/dark/flat) applied to all science images.</li>
-          <li>Differential photometry using stable comparison stars in the same field.</li>
-        </ul>
-      </div>
-
-      <div id="observations" class="section">
-        <h2>Observation Log</h2>
-        <ul>
-          <li>June 24, 2025 — EV Lac series</li>
-          <li>June 25, 2025 — EV Lac series</li>
-          <li>July 4, 2025 — EV Lac series</li>
-          <li>July 6, 2025 — EV Lac series</li>
-        </ul>
-      </div>
-
-      <div id="reduction" class="section">
-        <h2>Reduction & Photometry</h2>
-        <ul>
-          <li>Bias, dark, and flat correction to remove sensor and optical system signatures.</li>
-          <li>Astrometric alignment (optional if required), then aperture photometry per frame.</li>
-          <li>Light curve constructed from target – comparison star magnitude differences.</li>
-        </ul>
-        <figure>
-          <div class="frame">
-            <!-- Drop a pipeline diagram or screenshot -->
-            <!-- Save as: images/evlac/pipeline.png -->
-            <img src="images/evlac/pipeline.png" alt="Reduction pipeline" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-            <div class="ph">Placeholder — add <code>images/evlac/pipeline.png</code></div>
-          </div>
-          <figcaption class="caption">Processing pipeline from raw frames to calibrated light curve.</figcaption>
-        </figure>
-      </div>
-
-      <div id="results" class="section">
-        <h2>Results — Light Curves</h2>
-        <p>Each panel auto‑shows your plot if a file with the suggested name exists. Otherwise you’ll see a placeholder.</p>
-        <div class="grid2">
-          <figure>
-            <div class="frame">
-              <!-- Save plot as: images/evlac/lightcurve-2025-06-24.png -->
-              <img src="images/evlac/lightcurve-2025-06-24.png" alt="Light curve 2025-06-24" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>images/evlac/lightcurve-2025-06-24.png</code></div>
-            </div>
-            <figcaption class="caption">June 24, 2025 — EV Lac light curve.</figcaption>
-          </figure>
-          <figure>
-            <div class="frame">
-              <img src="images/evlac/lightcurve-2025-06-25.png" alt="Light curve 2025-06-25" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>images/evlac/lightcurve-2025-06-25.png</code></div>
-            </div>
-            <figcaption class="caption">June 25, 2025 — EV Lac light curve.</figcaption>
-          </figure>
-          <figure>
-            <div class="frame">
-              <img src="images/evlac/lightcurve-2025-07-04.png" alt="Light curve 2025-07-04" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>images/evlac/lightcurve-2025-07-04.png</code></div>
-            </div>
-            <figcaption class="caption">July 4, 2025 — EV Lac light curve.</figcaption>
-          </figure>
-          <figure>
-            <div class="frame">
-              <img src="images/evlac/lightcurve-2025-07-06.png" alt="Light curve 2025-07-06" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'">
-              <div class="ph">Placeholder — add <code>images/evlac/lightcurve-2025-07-06.png</code></div>
-            </div>
-            <figcaption class="caption">July 6, 2025 — EV Lac light curve.</figcaption>
-          </figure>
-        </div>
-      </div>
-
-      <div id="discussion" class="section">
-        <h2>Discussion</h2>
-        <ul>
-          <li>Light curves reveal rapid, impulsive brightening and decay consistent with magnetic reconnection flares.</li>
-          <li>Future work: flare frequency distribution and energy estimates from integrated flux.</li>
-        </ul>
-      </div>
-
-      <div id="references" class="section">
-        <h2>References</h2>
-        <ul>
-          <li>Project slides (Ceballos): <em>Photometric Observations of EV Lacertae’s Flare Activity</em> — Porterville College / Astrophysics REU (advisor: M. Richmond).</li>
-          <li>Background example: Boyd et&nbsp;al., JAAVSO, 2023 (light‑curve morphology for flares).</li>
-        </ul>
-      </div>
-
-      <div class="shape one"></div>
-      <div class="shape two"></div>
-    </section>
+    <div class="shape one"></div>
+    <div class="shape two"></div>
   </main>
 
   <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
 
   <script>
-    // cursor glow
     document.addEventListener('mousemove', (e) => {
       const g = document.querySelector('.glow');
       g.style.transform = `translate(${e.clientX-20}px, ${e.clientY-20}px)`;
