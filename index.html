@@ -80,27 +80,59 @@
     footer { text-align: center; padding: 24px; color: #94a3b8; margin-top: 32px; }
     @media (max-width: 1024px) { .page-layout { grid-template-columns: 1fr; } .image-wrap { grid-template-rows: 240px 240px; } }
 
-    /* ===== Hacker intro overlay (minimal, non-invasive) ===== */
+    /* ===== Hacker intro overlay (short, cooler, runs once via localStorage) ===== */
     #boot-screen {
       position: fixed; inset: 0; z-index: 9999;
-      background: #000; color: #0f0; font-family: monospace;
-      padding: 20px; display: flex; flex-direction: column;
-      opacity: 1; transition: opacity .35s ease;
+      display: grid; place-items: center;
+      background: radial-gradient(1200px 600px at 20% 10%, #0b1326 0%, #000 60%);
+      color: #7dd3fc; font-family: monospace;
+      opacity: 1; transition: opacity .45s ease, visibility .45s ease;
     }
-    #boot-screen.hidden { opacity: 0; pointer-events: none; }
-    #boot-log { flex: 1; overflow-y: auto; white-space: pre-wrap; line-height: 1.35; }
-    #boot-progress { height: 6px; background: #003300; border: 1px solid #0f0; margin-top: 10px; }
-    #boot-bar { height: 100%; background: #0f0; width: 0%; transition: width .1s linear; }
+    #boot-screen.hidden { opacity: 0; visibility: hidden; }
+
+    #boot-wrap { width: min(920px, 92vw); }
+    #boot-frame {
+      border: 1px solid #1f2a44; border-radius: 12px; padding: 16px 18px;
+      background: #030712;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6), inset 0 0 0 1px #0b1220;
+      position: relative; overflow: hidden;
+    }
+    /* scanline */
+    #boot-frame::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.08) 0px,
+        rgba(255,255,255,0.08) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      mix-blend-mode: overlay; opacity: .12; animation: scan 8s linear infinite;
+    }
+    @keyframes scan { 0% { transform: translateY(-10%);} 100% { transform: translateY(10%);} }
+
+    .boot-title { color: #a5b4fc; margin-bottom: 10px; }
+    #boot-log { white-space: pre-wrap; line-height: 1.35; min-height: 200px; max-height: 44vh; overflow-y: auto; }
+    .progress { height: 8px; border-radius: 12px; overflow: hidden; margin-top: 12px; background: #0b1220; border: 1px solid #1f2a44; }
+    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #22d3ee, #38bdf8); transition: width .2s linear; }
+    .cursor { display: inline-block; width: 8px; background: #7dd3fc; margin-left: 4px; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { #boot-frame::after { animation: none; } .cursor { animation: none; } }
   </style>
 </head>
 <body>
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- Hacker intro overlay -->
-  <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading">
-    <div id="boot-log"></div>
-    <div id="boot-progress"><div id="boot-bar"></div></div>
+  <!-- Hacker intro overlay (runs once; hold Alt while loading to force show) -->
+  <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading" style="display:none">
+    <div id="boot-wrap">
+      <div class="boot-title">retroskies://system/init</div>
+      <div id="boot-frame">
+        <pre id="boot-log">Initializing<span class="cursor"></span></pre>
+        <div class="progress"><div class="bar" id="boot-bar"></div></div>
+      </div>
+    </div>
   </div>
 
   <header>
@@ -134,6 +166,7 @@
   <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
 
   <script>
+    // Cursor glow movement (unchanged)
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
@@ -147,28 +180,55 @@
     imgBottom.addEventListener("animationend", () => imgBottom.classList.remove("sparkle"));
   </script>
 
-  <!-- Short, smooth hacker intro (no other changes) -->
+  <!-- Short, cooler hacker intro (4s total; uses localStorage to show once) -->
   <script>
     (function(){
-      const logEl = document.getElementById('boot-log');
-      const bar = document.getElementById('boot-bar');
-      const boot = document.getElementById('boot-screen');
+      const BOOT_KEY = "retroskiesBootSeen";
+      const FORCE_PARAM = new URLSearchParams(location.search).get("boot");
+      const forceShow = FORCE_PARAM === "1" || (window.event && window.event.altKey); // simple backdoor; or add ?boot=1
+      const hasSeen = localStorage.getItem(BOOT_KEY) === "1";
+
+      const boot = document.getElementById("boot-screen");
+      const logEl = document.getElementById("boot-log");
+      const bar = document.getElementById("boot-bar");
+
+      if (!boot || !logEl || !bar) return;
+
+      // If already seen and not forcing, skip instantly
+      if (hasSeen && !forceShow) {
+        boot.remove(); // no overlay
+        return;
+      }
+
+      // Show overlay
+      boot.style.display = "grid";
+
+      // Cooler lines + emoji-free retro tone
       const lines = [
-        '[ OK ] Mounting Retroskies',
-        '[ OK ] Loading assets',
-        '[ OK ] Initializing UI',
-        'System ready.'
+        "[ INIT ] Initializing systems",
+        "[ LOAD ] Retro computer kernel",
+        "[ MOUNT ] /opt/retroskies",
+        "[ VIDEO ] Bootstrapping CRT shader",
+        "[ INPUT ] Calibrating cursor glow",
+        "[ DATA ] Loading Messier objects",
+        "[ UI ] Warming interface pipeline",
+        "[ READY ] Launch parameters confirmed"
       ];
-      const baseCharDelay = 12;  // ms
-      const jitter = 8;          // ms
-      const lineGap = 60;        // ms
-      let i = 0, ci = 0, pct = 0, targetPct = 0;
+
+      const MIN_DURATION = 4000; // ms total target
+      const startTime = performance.now();
+
+      const baseCharDelay = 12;   // ms per char
+      const jitter = 8;           // ms random
+      const lineGap = 65;         // ms between lines
+
+      let i = 0, ci = 0, pct = 0, targetPct = 0, rafId;
 
       function easeProgress(){
-        pct += (targetPct - pct) * 0.2;
+        pct += (targetPct - pct) * 0.18;
         if (pct > 100) pct = 100;
-        bar.style.width = pct.toFixed(2) + '%';
-        requestAnimationFrame(easeProgress);
+        bar.style.width = pct.toFixed(2) + "%";
+        rafId = requestAnimationFrame(easeProgress);
       }
 
       function setTargetProgress(){
@@ -180,7 +240,7 @@
       function typeChar(){
         if (i >= lines.length){ finish(); return; }
         const line = lines[i];
-        if (ci === 0){ logEl.textContent += '> '; }
+        if (ci === 0){ logEl.textContent += "> "; }
         if (ci < line.length){
           logEl.textContent += line.charAt(ci);
           ci++;
@@ -188,7 +248,7 @@
           logEl.scrollTop = logEl.scrollHeight;
           setTimeout(typeChar, baseCharDelay + Math.random()*jitter);
         } else {
-          logEl.textContent += '\\n';
+          logEl.textContent += "\n";
           i++; ci = 0;
           setTimeout(typeChar, lineGap);
         }
@@ -196,16 +256,25 @@
 
       function finish(){
         targetPct = 100;
+        const elapsed = performance.now() - startTime;
+        const remaining = Math.max(0, MIN_DURATION - elapsed);
+
         setTimeout(() => {
-          boot.classList.add('hidden'); // fade out
-        }, 250);
+          cancelAnimationFrame(rafId);
+          boot.classList.add("hidden");
+          // mark as seen so it won't show again
+          try { localStorage.setItem(BOOT_KEY, "1"); } catch (e) {}
+          // optional: remove from DOM after fade
+          setTimeout(() => boot.remove(), 500);
+        }, remaining);
       }
 
+      // Start typing
       setTimeout(() => {
-        logEl.textContent = '';
+        logEl.textContent = "";
         easeProgress();
         typeChar();
-      }, 150);
+      }, 160);
     })();
   </script>
 </body>
