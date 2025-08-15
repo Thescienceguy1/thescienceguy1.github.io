@@ -98,45 +98,98 @@
     @keyframes sparklePulse { 0%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} 50%{ box-shadow: 0 0 28px rgba(56,189,248,0.35);} 100%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} }
     .sparkle { animation: sparklePulse 0.9s ease; }
 
-    /* ===== Hacker intro overlay ===== */
-    #boot-screen {
+    /* ===== Welcome intro overlay (replaces hacker boot) ===== */
+    #intro-screen {
       position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
-      background: radial-gradient(1200px 600px at 20% 10%, #0b1326 0%, #000 60%);
-      color: #7dd3fc; font-family: monospace;
-      opacity: 1; transition: opacity .45s ease, visibility .45s ease;
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(11,19,38,1) 0%, rgba(0,0,0,1) 60%),
+        radial-gradient(900px 500px at 80% 70%, rgba(6,33,53,0.6) 0%, rgba(0,0,0,0) 60%);
+      color: #e2f3ff; font-family: monospace;
+      opacity: 1; transition: opacity .6s ease, visibility .6s ease, filter .6s ease;
     }
-    #boot-screen.hidden { opacity: 0; visibility: hidden; }
-    #boot-wrap { width: min(920px, 92vw); }
-    #boot-frame {
-      border: 1px solid #1f2a44; border-radius: 12px; padding: 16px 18px; background: #030712;
-      box-shadow: 0 10px 40px rgba(0,0,0,.6), inset 0 0 0 1px #0b1220; position: relative; overflow: hidden;
+    #intro-screen.hidden { opacity: 0; visibility: hidden; filter: blur(4px); }
+
+    .intro-wrap { width: min(920px, 92vw); position: relative; display: grid; place-items: center; text-align: center; }
+
+    /* Soft aurora sweep */
+    .aurora {
+      position: absolute; inset: -20vh -20vw; pointer-events: none; opacity: 0.35; filter: blur(32px);
+      background:
+        conic-gradient(from 120deg, rgba(34,211,238,0.0) 0deg, rgba(34,211,238,0.3) 120deg, rgba(56,189,248,0.35) 180deg, rgba(99,102,241,0.25) 240deg, rgba(34,211,238,0.0) 360deg);
+      animation: auroraSpin 14s linear infinite;
+      mix-blend-mode: screen;
     }
-    #boot-frame::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 2px, transparent 4px);
-      mix-blend-mode: overlay; opacity: .12; animation: scan 8s linear infinite;
+    @keyframes auroraSpin {
+      0% { transform: rotate(0deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1.1); }
     }
-    @keyframes scan { 0% { transform: translateY(-10%);} 100% { transform: translateY(10%);} }
-    .boot-title { color: #a5b4fc; margin-bottom: 10px; }
-    #boot-log { white-space: pre-wrap; line-height: 1.35; min-height: 200px; max-height: 44vh; overflow-y: auto; }
-    .progress { height: 8px; border-radius: 12px; overflow: hidden; margin-top: 12px; background: #0b1220; border: 1px solid #1f2a44; }
-    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #22d3ee, #38bdf8); transition: width .2s linear; }
-    .cursor { display: inline-block; width: 8px; background: #7dd3fc; margin-left: 4px; animation: blink 1s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { #boot-frame::after { animation: none; } .cursor { animation: none; } }
+
+    /* Welcome text block */
+    .welcome {
+      position: relative; padding: 28px 22px; border-radius: 16px;
+      background: rgba(3,7,18,0.65);
+      border: 1px solid #1f2a44;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6), inset 0 0 0 1px #0b1220;
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+      transform: translateY(8px) scale(0.98);
+      opacity: 0;
+      animation: welcomeIn .9s cubic-bezier(.22,.9,.24,1) .25s forwards;
+    }
+    @keyframes welcomeIn {
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .welcome h2 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #a5b4fc, #38bdf8, #22d3ee);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .welcome p {
+      color: #b6c3d6; font-size: 0.98rem; letter-spacing: 0.04em;
+    }
+
+    /* Underline sweep */
+    .sweep {
+      position: absolute; left: 10%; right: 10%; height: 2px; bottom: 14px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      transform: scaleX(0); transform-origin: left;
+      animation: sweepIn .8s ease .55s forwards;
+      opacity: 0.7;
+    }
+    @keyframes sweepIn { to { transform: scaleX(1); } }
+
+    /* Orbiting specks for subtle motion */
+    .speck {
+      position: absolute; width: 6px; height: 6px; border-radius: 9999px;
+      background: radial-gradient(circle, #e2f3ff 0%, rgba(226,243,255,0) 70%);
+      opacity: 0.8;
+    }
+    .speck.s1 { top: -30px; left: -40px; animation: orb1 9s linear infinite; }
+    .speck.s2 { top: -20px; right: -30px; animation: orb2 11s linear infinite; }
+    .speck.s3 { bottom: -28px; left: 30%; animation: orb3 13s linear infinite; }
+    @keyframes orb1 { from { transform: translate(0,0); } to { transform: translate(120px, 80px); } }
+    @keyframes orb2 { from { transform: translate(0,0); } to { transform: translate(-140px, 90px); } }
+    @keyframes orb3 { from { transform: translate(0,0); } to { transform: translate(60px, -70px); } }
   </style>
 </head>
 <body>
   <div class="starscape"></div>
   <div class="glow" id="glow"></div>
 
-  <!-- Boot overlay -->
-  <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading" style="display:none">
-    <div id="boot-wrap">
-      <div class="boot-title">retroskies://system/init</div>
-      <div id="boot-frame">
-        <pre id="boot-log">Initializing<span class="cursor"></span></pre>
-        <div class="progress"><div class="bar" id="boot-bar"></div></div>
+  <!-- Welcome intro overlay -->
+  <div id="intro-screen" role="status" aria-live="polite" aria-label="Welcome" style="display:none">
+    <div class="intro-wrap">
+      <div class="aurora" aria-hidden="true"></div>
+      <div class="welcome">
+        <div class="speck s1" aria-hidden="true"></div>
+        <div class="speck s2" aria-hidden="true"></div>
+        <div class="speck s3" aria-hidden="true"></div>
+        <h2>Welcome to RetroSkies Lab</h2>
+        <p>Exploration, builds, and sky notes from Isaac Ceballos</p>
+        <div class="sweep" aria-hidden="true"></div>
       </div>
     </div>
   </div>
@@ -197,81 +250,38 @@
     sparkle("imgLeft"); sparkle("imgRight");
   </script>
 
-  <!-- Boot typing logic: once per browsing session -->
+  <!-- Welcome intro logic: once per browsing session -->
   <script>
     (function(){
-      const BOOT_KEY = "retroskiesBootSeenSession";
-      const FORCE_PARAM = new URLSearchParams(location.search).get("boot");
+      const INTRO_KEY = "retroskiesBootSeenSession"; // reuse the same key
+      const FORCE_PARAM = new URLSearchParams(location.search).get("intro");
       const forceShow = FORCE_PARAM === "1";
-      const hasSeen = sessionStorage.getItem(BOOT_KEY) === "1";
+      const hasSeen = sessionStorage.getItem(INTRO_KEY) === "1";
 
-      const boot = document.getElementById("boot-screen");
-      const logEl = document.getElementById("boot-log");
-      const bar = document.getElementById("boot-bar");
-      if (!boot || !logEl || !bar) return;
+      const intro = document.getElementById("intro-screen");
+      if (!intro) return;
 
-      if (hasSeen && !forceShow) { boot.remove(); return; }
-      boot.style.display = "grid";
+      if (hasSeen && !forceShow) { intro.remove(); return; }
+      intro.style.display = "grid";
 
-      const lines = [
-        "[ INIT ] Initializing systems",
-        "[ LOAD ] Retro computer kernel",
-        "[ MOUNT ] /opt/retroskies",
-        "[ VIDEO ] Bootstrapping CRT shader",
-        "[ INPUT ] Calibrating cursor glow",
-        "[ DATA ] Loading Messier objects",
-        "[ UI ] Warming interface pipeline",
-        "[ READY ] Launch parameters confirmed"
-      ];
-
-      const MIN_DURATION = 4000;
+      const MIN_DURATION = 4000; // about 4 seconds
       const startTime = performance.now();
-      const baseCharDelay = 12, jitter = 8, lineGap = 65;
-      let i = 0, ci = 0, pct = 0, targetPct = 0, rafId;
 
-      function easeProgress(){
-        pct += (targetPct - pct) * 0.18;
-        if (pct > 100) pct = 100;
-        bar.style.width = pct.toFixed(2) + "%";
-        rafId = requestAnimationFrame(easeProgress);
-      }
-      function setTargetProgress(){
-        const lp = i / lines.length;
-        const cp = ci / Math.max(1, lines[i]?.length || 1);
-        targetPct = Math.min(100, 5 + (lp * 90) + (cp * (90 / lines.length)));
-      }
-      function typeChar(){
-        if (i >= lines.length){ finish(); return; }
-        const line = lines[i];
-        if (ci === 0){ logEl.textContent += "> "; }
-        if (ci < line.length){
-          logEl.textContent += line.charAt(ci);
-          ci++;
-          setTargetProgress();
-          logEl.scrollTop = logEl.scrollHeight;
-          setTimeout(typeChar, baseCharDelay + Math.random()*jitter);
-        } else {
-          logEl.textContent += "\n";
-          i++; ci = 0;
-          setTimeout(typeChar, lineGap);
-        }
-      }
       function finish(){
-        targetPct = 100;
         const elapsed = performance.now() - startTime;
         const remaining = Math.max(0, MIN_DURATION - elapsed);
         setTimeout(() => {
-          cancelAnimationFrame(rafId);
-          boot.classList.add("hidden");
-          try { sessionStorage.setItem(BOOT_KEY, "1"); } catch(e){}
-          setTimeout(() => boot.remove(), 500);
+          intro.classList.add("hidden");
+          try { sessionStorage.setItem(INTRO_KEY, "1"); } catch(e){}
+          setTimeout(() => intro.remove(), 650);
         }, remaining);
       }
-      setTimeout(() => {
-        logEl.textContent = "";
-        easeProgress();
-        typeChar();
-      }, 160);
+
+      // In case user clicks, let them skip gracefully
+      intro.addEventListener("click", finish, { once: true });
+
+      // Auto-finish after target duration
+      finish();
     })();
   </script>
 </body>
