@@ -32,14 +32,22 @@
     }
 
     header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px; background: #1e293b; position: sticky; top: 0; z-index: 10;
-      border-bottom: 1px solid #0b1220;
+      display: grid; grid-template-columns: 1fr auto; align-items: center;
+      gap: 16px; padding: 20px; background: #1e293b;
+      position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #0b1220;
     }
     .brand { display: flex; align-items: center; gap: 16px; }
     .brand img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
     .brand h1 { font-size: 1.8rem; line-height: 1.1; }
     .brand p { font-size: 0.95rem; color: #94a3b8; margin-top: 4px; }
+
+    /* Minimal header link */
+    .header-links { display: flex; gap: 14px; align-items: center; }
+    .header-links a {
+      color: #cbd5e1; text-decoration: none; font-size: 0.95rem; padding: 6px 10px;
+      border: 1px solid transparent; border-radius: 10px; transition: border-color .2s, color .2s, background .2s;
+    }
+    .header-links a:hover { color: #e2e8f0; border-color: #38bdf833; background: #0b1220; }
 
     /* ===== Layout ===== */
     .page-layout {
@@ -79,6 +87,13 @@
     .card-link:hover { transform: translateY(-2px); box-shadow: 0 0 20px 6px #38bdf833; border-color: #38bdf8; }
     .card-link h2 { font-size: 1.2rem; margin-bottom: 6px; color: #f1f5f9; }
     .card-link p { color: #cbd5e1; font-size: 0.96rem; }
+
+    /* Featured card spans full width on desktop */
+    .featured-card { border-color: #38bdf833; }
+    @media (min-width: 1025px) {
+      .featured-card { grid-column: span 2; }
+    }
+
     .terminal-link { margin-top: 6px; font-size: 0.9em; text-align: center; }
     .terminal-link a { color: #475569; text-decoration: none; }
     .terminal-link a:hover { color: #38bdf8; }
@@ -98,7 +113,7 @@
     @keyframes sparklePulse { 0%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} 50%{ box-shadow: 0 0 28px rgba(56,189,248,0.35);} 100%{ box-shadow: 0 0 0 rgba(56,189,248,0.0);} }
     .sparkle { animation: sparklePulse 0.9s ease; }
 
-    /* ===== Welcome intro overlay (replaces hacker boot) ===== */
+    /* ===== Welcome intro overlay (kept from previous step) ===== */
     #intro-screen {
       position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
       background:
@@ -111,7 +126,6 @@
 
     .intro-wrap { width: min(920px, 92vw); position: relative; display: grid; place-items: center; text-align: center; }
 
-    /* Soft aurora sweep */
     .aurora {
       position: absolute; inset: -20vh -20vw; pointer-events: none; opacity: 0.35; filter: blur(32px);
       background:
@@ -119,12 +133,8 @@
       animation: auroraSpin 14s linear infinite;
       mix-blend-mode: screen;
     }
-    @keyframes auroraSpin {
-      0% { transform: rotate(0deg) scale(1.1); }
-      100% { transform: rotate(360deg) scale(1.1); }
-    }
+    @keyframes auroraSpin { 0% { transform: rotate(0deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1.1); } }
 
-    /* Welcome text block */
     .welcome {
       position: relative; padding: 28px 22px; border-radius: 16px;
       background: rgba(3,7,18,0.65);
@@ -136,9 +146,7 @@
       opacity: 0;
       animation: welcomeIn .9s cubic-bezier(.22,.9,.24,1) .25s forwards;
     }
-    @keyframes welcomeIn {
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
+    @keyframes welcomeIn { to { transform: translateY(0) scale(1); opacity: 1; } }
 
     .welcome h2 {
       font-size: clamp(1.6rem, 5vw, 2.4rem);
@@ -147,26 +155,13 @@
       background: linear-gradient(90deg, #a5b4fc, #38bdf8, #22d3ee);
       -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .welcome p {
-      color: #b6c3d6; font-size: 0.98rem; letter-spacing: 0.04em;
-    }
-
-    /* Underline sweep */
-    .sweep {
-      position: absolute; left: 10%; right: 10%; height: 2px; bottom: 14px;
+    .welcome p { color: #b6c3d6; font-size: 0.98rem; letter-spacing: 0.04em; }
+    .sweep { position: absolute; left: 10%; right: 10%; height: 2px; bottom: 14px;
       background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-      transform: scaleX(0); transform-origin: left;
-      animation: sweepIn .8s ease .55s forwards;
-      opacity: 0.7;
-    }
+      transform: scaleX(0); transform-origin: left; animation: sweepIn .8s ease .55s forwards; opacity: 0.7; }
     @keyframes sweepIn { to { transform: scaleX(1); } }
-
-    /* Orbiting specks for subtle motion */
-    .speck {
-      position: absolute; width: 6px; height: 6px; border-radius: 9999px;
-      background: radial-gradient(circle, #e2f3ff 0%, rgba(226,243,255,0) 70%);
-      opacity: 0.8;
-    }
+    .speck { position: absolute; width: 6px; height: 6px; border-radius: 9999px;
+      background: radial-gradient(circle, #e2f3ff 0%, rgba(226,243,255,0) 70%); opacity: 0.8; }
     .speck.s1 { top: -30px; left: -40px; animation: orb1 9s linear infinite; }
     .speck.s2 { top: -20px; right: -30px; animation: orb2 11s linear infinite; }
     .speck.s3 { bottom: -28px; left: 30%; animation: orb3 13s linear infinite; }
@@ -202,16 +197,19 @@
         <p>Engineering Student | Researcher | Innovator</p>
       </div>
     </div>
+
+    <!-- Minimal header link -->
+    <nav class="header-links" aria-label="Header links">
+      <a href="about.html">About</a>
+    </nav>
   </header>
 
   <main class="page-layout">
     <!-- Images row -->
     <section class="hero-images">
-      <!-- Left image -->
       <div class="img-frame">
         <img id="imgLeft" class="image" loading="eager" src="observatory-moon.png" alt="Observatory under moonlit sky" />
       </div>
-      <!-- Right image -->
       <div class="img-frame">
         <img id="imgRight" class="image" loading="eager" src="robot-cad.png" alt="3D CAD model of a robotics project" />
       </div>
@@ -219,11 +217,25 @@
 
     <!-- Cards row -->
     <section class="cards">
-      <a href="about.html" class="card-link"><h2>About</h2><p>Learn more about who I am, my background, and what drives my passion for engineering and discovery.</p></a>
-      <a href="projects.html" class="card-link"><h2>Projects</h2><p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p></a>
-      <a href="logs.html" class="card-link"><h2>Observing Logs</h2><p>Nightly notes, flare events, and telescope captures from my observation sessions.</p></a>
-      <a href="messier_catalogue_full.html" class="card-link"><h2>Messier Catalogue</h2><p>Quick reference for specs, parts, and notes. Search and filters included.</p></a>
-      <div class="terminal-link">
+      <!-- Featured Messier card placed where About used to be -->
+      <a href="messier_catalogue_full.html" class="card-link featured-card">
+        <h2>Messier Catalogue</h2>
+        <p>Browse all Messier objects by season and object type. Clean lookup and notes for each target.</p>
+      </a>
+
+      <!-- Keep the rest -->
+      <a href="projects.html" class="card-link">
+        <h2>Projects</h2>
+        <p>Explore my latest work including robotics, LIDAR mapping, and stellar observation campaigns.</p>
+      </a>
+
+      <a href="logs.html" class="card-link">
+        <h2>Observing Logs</h2>
+        <p>Nightly notes, flare events, and telescope captures from my observation sessions.</p>
+      </a>
+
+      <!-- Removed duplicate Messier card from before -->
+      <div class="terminal-link" style="grid-column: 1 / -1;">
         <a href="secret.html">[access terminal]</a>
       </div>
     </section>
@@ -250,10 +262,10 @@
     sparkle("imgLeft"); sparkle("imgRight");
   </script>
 
-  <!-- Welcome intro logic: once per browsing session -->
+  <!-- Welcome intro logic: once per session -->
   <script>
     (function(){
-      const INTRO_KEY = "retroskiesBootSeenSession"; // reuse the same key
+      const INTRO_KEY = "retroskiesBootSeenSession"; // reuse same key
       const FORCE_PARAM = new URLSearchParams(location.search).get("intro");
       const forceShow = FORCE_PARAM === "1";
       const hasSeen = sessionStorage.getItem(INTRO_KEY) === "1";
@@ -264,7 +276,7 @@
       if (hasSeen && !forceShow) { intro.remove(); return; }
       intro.style.display = "grid";
 
-      const MIN_DURATION = 4000; // about 4 seconds
+      const MIN_DURATION = 4000;
       const startTime = performance.now();
 
       function finish(){
@@ -277,10 +289,7 @@
         }, remaining);
       }
 
-      // In case user clicks, let them skip gracefully
       intro.addEventListener("click", finish, { once: true });
-
-      // Auto-finish after target duration
       finish();
     })();
   </script>
