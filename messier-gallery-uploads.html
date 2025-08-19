@@ -9,15 +9,14 @@
       --ink:#e2e8f0; --sub:#94a3b8; --bg1:#0f172a; --bg2:#000000; --card:#0b1220; --border:#0ea5e933;
     }
     *{box-sizing:border-box; margin:0; padding:0}
-    html{scroll-behavior:smooth}
     body{
       font-family: monospace; color:var(--ink);
       background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
-      min-height:100vh; overflow-x:hidden;
+      min-height:100vh;
     }
 
-    /* Minimal header */
-    header{padding:28px 20px 10px; text-align:center}
+    /* Header */
+    header{text-align:center; padding:28px 20px 10px}
     header h1{font-size:1.8rem; letter-spacing:.3px}
     header .subtitle{color:var(--sub); margin-top:6px}
     header .tagline{color:var(--sub); margin-top:4px; font-size:.95rem}
@@ -57,55 +56,40 @@
   </header>
 
   <main>
-    <div id="empty" class="empty" role="status" aria-live="polite">Scanning for uploads…</div>
-    <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
+    <div id="empty" class="empty">Scanning for uploads…</div>
+    <section class="grid" id="grid"></section>
   </main>
 
   <footer>&copy; 2025 Isaac Ceballos.</footer>
 
   <script>
-    // Change this if your images are elsewhere
     const prefix = 'images/messier/';
+    const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
 
-    // First match wins: prefer non-padded -> 2-digit -> 3-digit; prefer png -> jpg -> jpeg -> webp
-    const baseVariants = n => [`M${n}`, `M${String(n).padStart(2,'0')}`, `M${String(n).padStart(3,'0')}`];
-    const extVariants  = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
-
-    // Try to find the first existing filename for M{n}. Returns {id, src} or null.
-    function findFirstExisting(n) {
+    async function imageExists(url) {
       return new Promise(resolve => {
-        const bases = baseVariants(n);
-        let found = null, pending = 0, decided = false;
-
-        function tryOne(urlDisplay, urlTest) {
-          const img = new Image();
-          pending++;
-          img.onload = () => {
-            if (!decided) { decided = true; found = { id: `M${n}`, src: urlDisplay }; resolve(found); }
-            if (--pending === 0 && !decided) resolve(null);
-          };
-          img.onerror = () => { if (--pending === 0 && !decided) resolve(null); };
-          img.src = urlTest;
-        }
-
-        // Kick off checks in priority order; append cache-buster for the test URL only
-        for (const b of bases) {
-          for (const e of extVariants) {
-            const url = `${prefix}${b}.${e}`;
-            const testUrl = `${url}?cb=${Date.now()}`;
-            tryOne(url, testUrl);
-            if (decided) return;
-          }
-        }
-        // Safety: if nothing ever loads, resolve null in a bit
-        setTimeout(() => { if (!decided) resolve(null); }, 2000);
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url + '?cb=' + Date.now();
       });
+    }
+
+    async function findFile(n) {
+      const names = [`M${n}`, `M${String(n).padStart(2,'0')}`, `M${String(n).padStart(3,'0')}`];
+      for (const name of names) {
+        for (const ext of exts) {
+          const url = `${prefix}${name}.${ext}`;
+          if (await imageExists(url)) return url;
+        }
+      }
+      return null;
     }
 
     function makeCard(id, src) {
       const fig = document.createElement('figure'); fig.className = 'card';
       const thumb = document.createElement('div'); thumb.className = 'thumb';
-      const img = document.createElement('img'); img.alt = id; img.loading = 'lazy'; img.decoding = 'async'; img.src = src;
+      const img = document.createElement('img'); img.alt = id; img.loading = 'lazy'; img.src = src;
       thumb.appendChild(img);
       const cap = document.createElement('figcaption');
       const name = document.createElement('span'); name.className = 'obj'; name.textContent = id;
@@ -118,23 +102,19 @@
     (async () => {
       const grid = document.getElementById('grid');
       const empty = document.getElementById('empty');
-
-      // Find all existing files first, keeping index order 1..110
-      const checks = [];
-      for (let n = 1; n <= 110; n++) checks.push(findFirstExisting(n));
-      const results = await Promise.all(checks);
-
-      // Append in numeric order
       let count = 0;
-      results.forEach(item => {
-        if (!item) return;
-        grid.appendChild(makeCard(item.id, item.src));
-        count++;
-      });
 
-      grid.setAttribute('aria-busy', 'false');
-      if (count > 0) empty.style.display = 'none';
-      else empty.textContent = `No images found under ${prefix}`;
+      // Always iterate in order 1..110
+      for (let n = 1; n <= 110; n++) {
+        const src = await findFile(n);
+        if (src) {
+          grid.appendChild(makeCard(`M${n}`, src));
+          count++;
+        }
+      }
+
+      if (count) empty.style.display = 'none';
+      else empty.textContent = 'No Messier uploads found in ' + prefix;
     })();
   </script>
 </body>
