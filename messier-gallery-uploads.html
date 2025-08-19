@@ -7,16 +7,12 @@
   <style>
     html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: monospace;
       background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
       color: #e2e8f0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
+      min-height: 100vh; overflow-x: hidden; position: relative;
     }
-
     .starscape{position:fixed;inset:0;background-image:url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');background-size:cover;background-repeat:no-repeat;background-position:center;opacity:.08;z-index:-2;pointer-events:none}
     .starscape::after{content:"";position:absolute;inset:0;backdrop-filter:blur(1px);background:rgba(0,0,0,.1)}
     .glow{position:fixed;top:0;left:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);pointer-events:none;z-index:1000;mix-blend-mode:overlay;transition:transform .05s ease}
@@ -62,21 +58,21 @@
 
   <header>
     <div class="brand">
-      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <img src="/retroskies-logo.png" alt="Retroskies Lab Logo" />
       <div>
         <h1>My Messier Shots</h1>
         <p>Only the images you have uploaded</p>
       </div>
     </div>
-    <div class="back"><a href="index.html">← Back to Home</a></div>
+    <div class="back"><a href="/index.html">← Back to Home</a></div>
   </header>
 
   <main class="wrap">
     <h2 class="title">Captured Objects</h2>
-    <p class="subtitle">Scans <code>images/messier/</code> for <code>M1..M110</code> using <code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, or <code>.webp</code>. Also accepts zero‑padded names.</p>
+    <p class="subtitle">Scans <code>/images/messier/</code> for <code>M1..M110</code> in <code>.png .jpg .jpeg .webp</code>. Zero padding is fine.</p>
 
     <div id="empty" class="empty" role="status" aria-live="polite">
-      No images found yet. Add files like <code>images/messier/M42.jpg</code> and reload.
+      No images found yet. Add something like <code>/images/messier/M42.png</code> and reload.
     </div>
 
     <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
@@ -93,7 +89,7 @@
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
-    // Preload util
+    // Preload util with cache-buster
     function preload(src) {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -101,7 +97,9 @@
         img.decoding = 'async';
         img.onload = () => resolve(src);
         img.onerror = reject;
-        img.src = src;
+        // add ?cb= to avoid stale 404s on GitHub Pages
+        const bust = src.includes('?') ? '&' : '?';
+        img.src = src + bust + 'cb=' + Date.now();
       });
     }
 
@@ -130,7 +128,7 @@
 
       const note = document.createElement('span');
       note.className = 'note';
-      note.textContent = src.split('.').pop().toUpperCase();
+      note.textContent = src.split('.').pop().split('?')[0].toUpperCase();
 
       cap.appendChild(name);
       cap.appendChild(note);
@@ -140,7 +138,6 @@
       return fig;
     }
 
-    // Try multiple name variants and extensions
     async function findExistingSrc(prefix, n) {
       const bases = [
         `M${n}`,
@@ -152,17 +149,15 @@
       for (const base of bases) {
         for (const ext of exts) {
           const candidate = `${prefix}${base}.${ext}`;
-          try {
-            await preload(candidate);
-            return candidate;
-          } catch (_) {}
+          try { await preload(candidate); return candidate; } catch (_) {}
         }
       }
       return null;
     }
 
     (async () => {
-      const prefix = 'images/messier/';
+      // Use absolute path from site root
+      const prefix = '/images/messier/';
       const found = [];
 
       for (let n = 1; n <= 110; n++) {
@@ -171,7 +166,7 @@
       }
 
       if (found.length) {
-        found.sort((a, b) => parseInt(a.id.slice(1),10) - parseInt(b.id.slice(1),10));
+        found.sort((a,b) => parseInt(a.id.slice(1),10) - parseInt(b.id.slice(1),10));
         const frag = document.createDocumentFragment();
         for (const { id, src } of found) frag.appendChild(makeCard(id, src));
         grid.appendChild(frag);
