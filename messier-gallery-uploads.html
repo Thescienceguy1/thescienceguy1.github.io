@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Messier Shots | Isaac Ceballos</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: monospace;
+      background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .starscape {
+      position: fixed; inset: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
+      background-size: cover; background-repeat: no-repeat; background-position: center;
+      opacity: 0.08; z-index: -2; pointer-events: none;
+    }
+    .starscape::after { content:""; position:absolute; inset:0; backdrop-filter: blur(1px); background: rgba(0,0,0,0.1); }
+
+    .glow {
+      position: fixed; top: 0; left: 0; width: 40px; height: 40px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none; z-index: 1000; mix-blend-mode: overlay; transition: transform 0.05s ease;
+    }
+
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px; background: #1e293b; position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid #0b1220;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
+    .brand h1 { font-size: 1.25rem; line-height: 1.1; }
+    .brand p { font-size: 0.9rem; color: #94a3b8; }
+
+    .back a { color: #94a3b8; text-decoration: none; font-size: 0.95rem; }
+    .back a:hover { color: #38bdf8; }
+
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    .title { margin-bottom: 8px; font-size: 1.6rem; color: #f1f5f9; letter-spacing: 0.3px; }
+    .subtitle { color: #94a3b8; margin-bottom: 22px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 720px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .grid { grid-template-columns: 1fr; } }
+
+    figure.card {
+      background: #0b1220;
+      border: 1px solid #0ea5e933;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    figure.card:hover { transform: translateY(-2px); box-shadow: 0 0 18px 6px #38bdf833; border-color: #38bdf8; }
+
+    .thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(56,189,248,0.12), transparent 40%),
+        linear-gradient(145deg, #0b1220, #111827);
+      border-bottom: 1px solid #0ea5e922;
+      display: grid; place-items: center;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    figcaption {
+      padding: 10px 12px;
+      display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+    }
+    .obj { font-weight: 600; color: #e2e8f0; }
+    .note { font-size: 0.85rem; color: #94a3b8; }
+
+    .empty {
+      margin: 24px 0;
+      padding: 16px 14px;
+      border: 1px dashed #334155;
+      background: #0b1220aa;
+      border-radius: 12px;
+      color: #94a3b8;
+    }
+
+    footer { text-align: center; padding: 24px; color: #94a3b8; }
+
+    .shape { position: absolute; border-radius: 9999px; opacity: 0.15; filter: blur(24px); pointer-events: none; }
+    .shape.one { width: 240px; height: 240px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); top: 80px; right: -20px; }
+    .shape.two { width: 260px; height: 260px; background: radial-gradient(circle at 60% 60%, #22d3ee, transparent 65%); bottom: -30px; left: -30px; }
+  </style>
+</head>
+<body>
+  <div class="starscape"></div>
+  <div class="glow" id="glow"></div>
+
+  <header>
+    <div class="brand">
+      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <div>
+        <h1>My Messier Shots</h1>
+        <p>Only the images you have uploaded</p>
+      </div>
+    </div>
+    <div class="back"><a href="index.html">← Back to Home</a></div>
+  </header>
+
+  <main class="wrap">
+    <h2 class="title">Captured Objects</h2>
+    <p class="subtitle">
+      This page scans <code>images/messier/</code> for files named <code>M1.png</code> to <code>M110.png</code> and shows only the ones that exist.
+    </p>
+
+    <div id="empty" class="empty" role="status" aria-live="polite">
+      No images found yet. Add files like <code>images/messier/M42.png</code> and reload.
+    </div>
+
+    <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
+  </main>
+
+  <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
+  <div class="shape one"></div>
+  <div class="shape two"></div>
+
+  <script>
+    // Cursor glow
+    document.addEventListener("mousemove", (e) => {
+      const glow = document.getElementById("glow");
+      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    // Helper to preload an image and resolve only if it loads
+    function preload(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.onload = () => resolve(src);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    const grid = document.getElementById('grid');
+    const emptyState = document.getElementById('empty');
+
+    // Build a card element
+    function makeCard(id, src) {
+      const fig = document.createElement('figure');
+      fig.className = 'card';
+      fig.setAttribute('tabindex', '0');
+
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = id;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      thumb.appendChild(img);
+
+      const cap = document.createElement('figcaption');
+      const name = document.createElement('span');
+      name.className = 'obj';
+      name.textContent = id;
+
+      const note = document.createElement('span');
+      note.className = 'note';
+      note.textContent = 'PNG';
+
+      cap.appendChild(name);
+      cap.appendChild(note);
+
+      fig.appendChild(thumb);
+      fig.appendChild(cap);
+      return fig;
+    }
+
+    // Only append cards for images that actually load
+    (async () => {
+      const prefix = 'images/messier/';
+      const tasks = [];
+      const total = 110;
+
+      for (let n = 1; n <= total; n++) {
+        const id = `M${n}`;
+        const src = `${prefix}${id}.png`;
+        tasks.push(
+          preload(src)
+            .then(() => ({ id, src }))
+            .catch(() => null)
+        );
+      }
+
+      const results = await Promise.all(tasks);
+      const found = results.filter(Boolean);
+
+      if (found.length > 0) {
+        found.sort((a, b) => {
+          // numeric sort by the number part
+          const na = parseInt(a.id.slice(1), 10);
+          const nb = parseInt(b.id.slice(1), 10);
+          return na - nb;
+        });
+
+        const frag = document.createDocumentFragment();
+        for (const { id, src } of found) {
+          frag.appendChild(makeCard(id, src));
+        }
+        grid.appendChild(frag);
+        emptyState.style.display = 'none';
+      } else {
+        emptyState.style.display = 'block';
+      }
+
+      grid.setAttribute('aria-busy', 'false');
+    })();
+  </script>
+</body>
+</html>
