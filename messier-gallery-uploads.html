@@ -7,101 +7,66 @@
   <style>
     html { scroll-behavior: smooth; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: monospace;
-      background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
-      color: #e2e8f0;
-      min-height: 100vh; overflow-x: hidden; position: relative;
-    }
-    .starscape{position:fixed;inset:0;background-image:url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');background-size:cover;background-repeat:no-repeat;background-position:center;opacity:.08;z-index:-2;pointer-events:none}
-    .starscape::after{content:"";position:absolute;inset:0;backdrop-filter:blur(1px);background:rgba(0,0,0,.1)}
-    .glow{position:fixed;top:0;left:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);pointer-events:none;z-index:1000;mix-blend-mode:overlay;transition:transform .05s ease}
-
-    header{display:flex;justify-content:space-between;align-items:center;padding:20px;background:#1e293b;position:sticky;top:0;z-index:10;border-bottom:1px solid #0b1220}
-    .brand{display:flex;align-items:center;gap:16px}
-    .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover}
-    .brand h1{font-size:1.25rem;line-height:1.1}
-    .brand p{font-size:.9rem;color:#94a3b8}
-    .back a{color:#94a3b8;text-decoration:none;font-size:.95rem}
-    .back a:hover{color:#38bdf8}
-
-    .wrap{max-width:1200px;margin:0 auto;padding:24px}
-    .title{margin-bottom:8px;font-size:1.6rem;color:#f1f5f9;letter-spacing:.3px}
-    .subtitle{color:#94a3b8;margin-bottom:22px}
-
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    @media (max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:480px){.grid{grid-template-columns:1fr}}
-
-    figure.card{background:#0b1220;border:1px solid #0ea5e933;border-radius:16px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
-    figure.card:hover{transform:translateY(-2px);box-shadow:0 0 18px 6px #38bdf833;border-color:#38bdf8}
-
-    .thumb{position:relative;width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 30% 20%,rgba(56,189,248,.12),transparent 40%),linear-gradient(145deg,#0b1220,#111827);border-bottom:1px solid #0ea5e922;display:grid;place-items:center}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-
-    figcaption{padding:10px 12px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-    .obj{font-weight:600;color:#e2e8f0}
-    .note{font-size:.85rem;color:#94a3b8}
-
-    .empty{margin:24px 0;padding:16px 14px;border:1px dashed #334155;background:#0b1220aa;border-radius:12px;color:#94a3b8}
-
-    footer{text-align:center;padding:24px;color:#94a3b8}
-    .shape{position:absolute;border-radius:9999px;opacity:.15;filter:blur(24px);pointer-events:none}
-    .shape.one{width:240px;height:240px;background:radial-gradient(circle at 30% 30%,#38bdf8,transparent 60%);top:80px;right:-20px}
-    .shape.two{width:260px;height:260px;background:radial-gradient(circle at 60% 60%,#22d3ee,transparent 65%);bottom:-30px;left:-30px}
+    body { font-family: monospace; background: linear-gradient(180deg, #0f172a 0%, #000000 100%); color: #e2e8f0; min-height: 100vh; overflow-x: hidden; position: relative; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #1e293b; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #0b1220; }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
+    .brand h1 { font-size: 1.25rem; line-height: 1.1; }
+    .brand p { font-size: 0.9rem; color: #94a3b8; }
+    .back a { color: #94a3b8; text-decoration: none; font-size: 0.95rem; }
+    .back a:hover { color: #38bdf8; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .title { margin-bottom: 8px; font-size: 1.6rem; color: #f1f5f9; letter-spacing: 0.3px; }
+    .subtitle { color: #94a3b8; margin-bottom: 22px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 720px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .grid { grid-template-columns: 1fr; } }
+    figure.card { background: #0b1220; border: 1px solid #0ea5e933; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.35); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    figure.card:hover { transform: translateY(-2px); box-shadow: 0 0 18px 6px #38bdf833; border-color: #38bdf8; }
+    .thumb { width: 100%; aspect-ratio: 1 / 1; background: radial-gradient(circle at 30% 20%, rgba(56,189,248,0.12), transparent 40%), linear-gradient(145deg, #0b1220, #111827); border-bottom: 1px solid #0ea5e922; display: grid; place-items: center; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    figcaption { padding: 10px 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .obj { font-weight: 600; color: #e2e8f0; }
+    .note { font-size: 0.85rem; color: #94a3b8; }
+    .empty { margin: 24px 0; padding: 16px 14px; border: 1px dashed #334155; background: #0b1220aa; border-radius: 12px; color: #94a3b8; }
+    footer { text-align: center; padding: 24px; color: #94a3b8; }
   </style>
 </head>
 <body>
-  <div class="starscape"></div>
-  <div class="glow" id="glow"></div>
-
   <header>
     <div class="brand">
-      <img src="/retroskies-logo.png" alt="Retroskies Lab Logo" />
+      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
       <div>
         <h1>My Messier Shots</h1>
         <p>Only the images you have uploaded</p>
       </div>
     </div>
-    <div class="back"><a href="/index.html">← Back to Home</a></div>
+    <div class="back"><a href="index.html">← Back to Home</a></div>
   </header>
 
   <main class="wrap">
     <h2 class="title">Captured Objects</h2>
-    <p class="subtitle">Scans <code>/images/messier/</code> for <code>M1..M110</code> in <code>.png .jpg .jpeg .webp</code>. Zero padding is fine.</p>
-
-    <div id="empty" class="empty" role="status" aria-live="polite">
-      No images found yet. Add something like <code>/images/messier/M42.png</code> and reload.
-    </div>
-
+    <p class="subtitle">Automatically lists your uploads from <code>images/messier/</code>. Works with <code>.png .jpg .jpeg .webp</code> and names like <code>M11</code>, <code>M011</code>.</p>
+    <div id="empty" class="empty" role="status" aria-live="polite">Scanning for uploads…</div>
     <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
   </main>
 
   <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
-  <div class="shape one"></div>
-  <div class="shape two"></div>
 
   <script>
-    // Cursor glow
-    document.addEventListener("mousemove", (e) => {
-      const glow = document.getElementById("glow");
-      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
-    });
-
-    // Preload util with cache-buster
-    function preload(src) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.onload = () => resolve(src);
-        img.onerror = reject;
-        // add ?cb= to avoid stale 404s on GitHub Pages
-        const bust = src.includes('?') ? '&' : '?';
-        img.src = src + bust + 'cb=' + Date.now();
-      });
+    // Figure out correct base for GitHub Pages (user site vs project site)
+    function ghBase() {
+      const parts = location.pathname.split('/').filter(Boolean);
+      // On user site: /page.html -> parts[0] is the file or folder, base is '/'
+      // On project site: /repo/page.html -> first segment is repo, base is '/repo/'
+      if (location.hostname.endsWith('github.io') && parts.length > 1) {
+        return '/' + parts[0] + '/';
+      }
+      return '/';
     }
+    const BASE = ghBase();
+    const prefix = BASE + 'images/messier/';
 
     const grid = document.getElementById('grid');
     const emptyState = document.getElementById('empty');
@@ -109,74 +74,55 @@
     function makeCard(id, src) {
       const fig = document.createElement('figure');
       fig.className = 'card';
-      fig.setAttribute('tabindex', '0');
-
       const thumb = document.createElement('div');
       thumb.className = 'thumb';
-
       const img = document.createElement('img');
-      img.src = src;
       img.alt = id;
       img.loading = 'lazy';
       img.decoding = 'async';
+      img.src = src;
       thumb.appendChild(img);
-
       const cap = document.createElement('figcaption');
-      const name = document.createElement('span');
-      name.className = 'obj';
-      name.textContent = id;
-
-      const note = document.createElement('span');
-      note.className = 'note';
-      note.textContent = src.split('.').pop().split('?')[0].toUpperCase();
-
-      cap.appendChild(name);
-      cap.appendChild(note);
-
-      fig.appendChild(thumb);
-      fig.appendChild(cap);
+      const name = document.createElement('span'); name.className = 'obj'; name.textContent = id;
+      const note = document.createElement('span'); note.className = 'note'; note.textContent = src.split('.').pop().split('?')[0].toUpperCase();
+      cap.appendChild(name); cap.appendChild(note);
+      fig.appendChild(thumb); fig.appendChild(cap);
       return fig;
     }
 
-    async function findExistingSrc(prefix, n) {
+    const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
+
+    // Try to load an image. Only append if it loads successfully.
+    function tryAppend(n) {
       const bases = [
         `M${n}`,
-        `M${String(n).padStart(2,'0')}`,
-        `M${String(n).padStart(3,'0')}`,
+        `M${String(n).padStart(2, '0')}`,
+        `M${String(n).padStart(3, '0')}`,
       ];
-      const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
-
-      for (const base of bases) {
-        for (const ext of exts) {
-          const candidate = `${prefix}${base}.${ext}`;
-          try { await preload(candidate); return candidate; } catch (_) {}
+      for (const b of bases) {
+        for (const e of exts) {
+          const url = `${prefix}${b}.${e}?cb=${Date.now()}`;
+          const img = new Image();
+          img.onload = () => {
+            grid.appendChild(makeCard(`M${n}`, url));
+            emptyState.style.display = 'none';
+          };
+          img.onerror = () => {};
+          img.src = url;
         }
       }
-      return null;
     }
 
     (async () => {
-      // Use absolute path from site root
-      const prefix = '/images/messier/';
-      const found = [];
-
-      for (let n = 1; n <= 110; n++) {
-        const src = await findExistingSrc(prefix, n);
-        if (src) found.push({ id: `M${n}`, src });
-      }
-
-      if (found.length) {
-        found.sort((a,b) => parseInt(a.id.slice(1),10) - parseInt(b.id.slice(1),10));
-        const frag = document.createDocumentFragment();
-        for (const { id, src } of found) frag.appendChild(makeCard(id, src));
-        grid.appendChild(frag);
-        emptyState.style.display = 'none';
-      } else {
-        emptyState.style.display = 'block';
-      }
-
+      for (let n = 1; n <= 110; n++) tryAppend(n);
       grid.setAttribute('aria-busy', 'false');
-      console.log('Detected files:', found.map(f => f.src));
+
+      // If nothing shows after a short delay, update empty text
+      setTimeout(() => {
+        if (!grid.children.length) {
+          emptyState.textContent = `No images found at ${prefix}. Try opening one directly to verify, e.g. ${prefix}M11.png`;
+        }
+      }, 1200);
     })();
   </script>
 </body>
