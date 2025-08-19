@@ -3,128 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Messier Shots | Isaac Ceballos</title>
+  <title>Messier Gallery — Isaac Ceballos</title>
   <style>
-    html { scroll-behavior: smooth; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: monospace; background: linear-gradient(180deg, #0f172a 0%, #000000 100%); color: #e2e8f0; min-height: 100vh; overflow-x: hidden; position: relative; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #1e293b; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #0b1220; }
-    .brand { display: flex; align-items: center; gap: 16px; }
-    .brand img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
-    .brand h1 { font-size: 1.25rem; line-height: 1.1; }
-    .brand p { font-size: 0.9rem; color: #94a3b8; }
-    .back a { color: #94a3b8; text-decoration: none; font-size: 0.95rem; }
-    .back a:hover { color: #38bdf8; }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
-    .title { margin-bottom: 8px; font-size: 1.6rem; color: #f1f5f9; letter-spacing: 0.3px; }
-    .subtitle { color: #94a3b8; margin-bottom: 22px; }
-    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 720px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px)  { .grid { grid-template-columns: 1fr; } }
-    figure.card { background: #0b1220; border: 1px solid #0ea5e933; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.35); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-    figure.card:hover { transform: translateY(-2px); box-shadow: 0 0 18px 6px #38bdf833; border-color: #38bdf8; }
-    .thumb { width: 100%; aspect-ratio: 1 / 1; background: radial-gradient(circle at 30% 20%, rgba(56,189,248,0.12), transparent 40%), linear-gradient(145deg, #0b1220, #111827); border-bottom: 1px solid #0ea5e922; display: grid; place-items: center; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    figcaption { padding: 10px 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .obj { font-weight: 600; color: #e2e8f0; }
-    .note { font-size: 0.85rem; color: #94a3b8; }
-    .empty { margin: 24px 0; padding: 16px 14px; border: 1px dashed #334155; background: #0b1220aa; border-radius: 12px; color: #94a3b8; }
-    footer { text-align: center; padding: 24px; color: #94a3b8; }
+    :root{
+      --ink:#e2e8f0; --sub:#94a3b8; --bg1:#0f172a; --bg2:#000000; --card:#0b1220; --border:#0ea5e933;
+    }
+    *{box-sizing:border-box; margin:0; padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family: monospace; color:var(--ink);
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+      min-height:100vh; overflow-x:hidden;
+    }
+
+    /* Minimal header */
+    header{padding:28px 20px 10px; text-align:center}
+    header h1{font-size:1.8rem; letter-spacing:.3px}
+    header .subtitle{color:var(--sub); margin-top:6px}
+    header .tagline{color:var(--sub); margin-top:4px; font-size:.95rem}
+
+    main{max-width:1200px; margin:18px auto 40px; padding:0 20px}
+    .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+    @media (max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:480px){.grid{grid-template-columns:1fr}}
+
+    figure.card{
+      background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+      box-shadow:0 6px 16px rgba(0,0,0,.35);
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    figure.card:hover{transform:translateY(-2px); box-shadow:0 0 18px 6px #38bdf833; border-color:#38bdf8}
+
+    .thumb{width:100%; aspect-ratio:1/1;
+      background: radial-gradient(circle at 30% 20%, rgba(56,189,248,.12), transparent 40%),
+                  linear-gradient(145deg, #0b1220, #111827);
+      border-bottom:1px solid #0ea5e922; display:grid; place-items:center}
+    .thumb img{width:100%; height:100%; object-fit:cover; display:block}
+
+    figcaption{padding:10px 12px; display:flex; justify-content:space-between; align-items:baseline; gap:8px}
+    .obj{font-weight:600}
+    .note{font-size:.85rem; color:var(--sub)}
+
+    .empty{margin:24px 0; padding:16px 14px; border:1px dashed #334155; background:#0b1220aa; border-radius:12px; color:var(--sub)}
+    footer{text-align:center; padding:22px; color:var(--sub)}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
-      <div>
-        <h1>My Messier Shots</h1>
-        <p>Only the images you have uploaded</p>
-      </div>
-    </div>
-    <div class="back"><a href="index.html">← Back to Home</a></div>
+    <h1>Isaac Ceballos</h1>
+    <div class="subtitle">Messier Gallery</div>
+    <div class="tagline">Where I add my pictures</div>
   </header>
 
-  <main class="wrap">
-    <h2 class="title">Captured Objects</h2>
-    <p class="subtitle">Lists uploads from <code>images/messier/</code>. Supports <code>.png .jpg .jpeg .webp</code> and names like <code>M11</code>, <code>M011</code>.</p>
+  <main>
     <div id="empty" class="empty" role="status" aria-live="polite">Scanning for uploads…</div>
     <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
   </main>
 
-  <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
+  <footer>&copy; 2025 Isaac Ceballos.</footer>
 
   <script>
-    // Detect correct base on GitHub Pages
-    function ghBase() {
-      const parts = location.pathname.split('/').filter(Boolean);
-      if (location.hostname.endsWith('github.io') && parts.length > 1) {
-        return '/' + parts[0] + '/';
-      }
-      return '/';
+    // Change this if your images are elsewhere
+    const prefix = 'images/messier/';
+
+    // First match wins: prefer non-padded -> 2-digit -> 3-digit; prefer png -> jpg -> jpeg -> webp
+    const baseVariants = n => [`M${n}`, `M${String(n).padStart(2,'0')}`, `M${String(n).padStart(3,'0')}`];
+    const extVariants  = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
+
+    // Try to find the first existing filename for M{n}. Returns {id, src} or null.
+    function findFirstExisting(n) {
+      return new Promise(resolve => {
+        const bases = baseVariants(n);
+        let found = null, pending = 0, decided = false;
+
+        function tryOne(urlDisplay, urlTest) {
+          const img = new Image();
+          pending++;
+          img.onload = () => {
+            if (!decided) { decided = true; found = { id: `M${n}`, src: urlDisplay }; resolve(found); }
+            if (--pending === 0 && !decided) resolve(null);
+          };
+          img.onerror = () => { if (--pending === 0 && !decided) resolve(null); };
+          img.src = urlTest;
+        }
+
+        // Kick off checks in priority order; append cache-buster for the test URL only
+        for (const b of bases) {
+          for (const e of extVariants) {
+            const url = `${prefix}${b}.${e}`;
+            const testUrl = `${url}?cb=${Date.now()}`;
+            tryOne(url, testUrl);
+            if (decided) return;
+          }
+        }
+        // Safety: if nothing ever loads, resolve null in a bit
+        setTimeout(() => { if (!decided) resolve(null); }, 2000);
+      });
     }
-    const BASE = ghBase();
-    const prefix = BASE + 'images/messier/';
 
-    const grid = document.getElementById('grid');
-    const emptyState = document.getElementById('empty');
-
-    function makeCard(id, srcNoCb) {
-      const fig = document.createElement('figure');
-      fig.className = 'card';
-      const thumb = document.createElement('div');
-      thumb.className = 'thumb';
-      const img = document.createElement('img');
-      img.alt = id;
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.src = srcNoCb; // display without cache-buster
+    function makeCard(id, src) {
+      const fig = document.createElement('figure'); fig.className = 'card';
+      const thumb = document.createElement('div'); thumb.className = 'thumb';
+      const img = document.createElement('img'); img.alt = id; img.loading = 'lazy'; img.decoding = 'async'; img.src = src;
       thumb.appendChild(img);
       const cap = document.createElement('figcaption');
       const name = document.createElement('span'); name.className = 'obj'; name.textContent = id;
-      const note = document.createElement('span'); note.className = 'note'; note.textContent = srcNoCb.split('.').pop().toUpperCase();
+      const note = document.createElement('span'); note.className = 'note'; note.textContent = src.split('.').pop().toUpperCase();
       cap.appendChild(name); cap.appendChild(note);
       fig.appendChild(thumb); fig.appendChild(cap);
       return fig;
     }
 
-    const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
-    const added = new Set(); // prevents duplicates like M11 from multiple variants
-
-    function tryVariants(n) {
-      // Preferred order: no pad, 2-digit, 3-digit
-      const bases = [`M${n}`, `M${String(n).padStart(2,'0')}`, `M${String(n).padStart(3,'0')}`];
-      let done = false;
-
-      for (const b of bases) {
-        for (const e of exts) {
-          const url = `${prefix}${b}.${e}`;
-          const testUrl = `${url}?cb=${Date.now()}`; // bust cache when testing
-          const img = new Image();
-          img.onload = () => {
-            if (done) return;
-            const key = 'M' + n;
-            if (added.has(key)) return;
-            done = true;
-            added.add(key);
-            grid.appendChild(makeCard(key, url));
-            emptyState.style.display = 'none';
-          };
-          img.onerror = () => {};
-          img.src = testUrl;
-        }
-      }
-    }
-
     (async () => {
-      for (let n = 1; n <= 110; n++) tryVariants(n);
-      grid.setAttribute('aria-busy', 'false');
+      const grid = document.getElementById('grid');
+      const empty = document.getElementById('empty');
 
-      setTimeout(() => {
-        if (!grid.children.length) {
-          emptyState.textContent = `No images found at ${prefix}. Try opening one directly to verify, for example ${prefix}M11.png`;
-        }
-      }, 1200);
+      // Find all existing files first, keeping index order 1..110
+      const checks = [];
+      for (let n = 1; n <= 110; n++) checks.push(findFirstExisting(n));
+      const results = await Promise.all(checks);
+
+      // Append in numeric order
+      let count = 0;
+      results.forEach(item => {
+        if (!item) return;
+        grid.appendChild(makeCard(item.id, item.src));
+        count++;
+      });
+
+      grid.setAttribute('aria-busy', 'false');
+      if (count > 0) empty.style.display = 'none';
+      else empty.textContent = `No images found under ${prefix}`;
     })();
   </script>
 </body>
