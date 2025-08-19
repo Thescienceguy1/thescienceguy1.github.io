@@ -47,7 +47,7 @@
 
   <main class="wrap">
     <h2 class="title">Captured Objects</h2>
-    <p class="subtitle">Automatically lists your uploads from <code>images/messier/</code>. Works with <code>.png .jpg .jpeg .webp</code> and names like <code>M11</code>, <code>M011</code>.</p>
+    <p class="subtitle">Lists uploads from <code>images/messier/</code>. Supports <code>.png .jpg .jpeg .webp</code> and names like <code>M11</code>, <code>M011</code>.</p>
     <div id="empty" class="empty" role="status" aria-live="polite">Scanning for uploads…</div>
     <section class="grid" id="grid" aria-live="polite" aria-busy="true"></section>
   </main>
@@ -55,11 +55,9 @@
   <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
 
   <script>
-    // Figure out correct base for GitHub Pages (user site vs project site)
+    // Detect correct base on GitHub Pages
     function ghBase() {
       const parts = location.pathname.split('/').filter(Boolean);
-      // On user site: /page.html -> parts[0] is the file or folder, base is '/'
-      // On project site: /repo/page.html -> first segment is repo, base is '/repo/'
       if (location.hostname.endsWith('github.io') && parts.length > 1) {
         return '/' + parts[0] + '/';
       }
@@ -71,7 +69,7 @@
     const grid = document.getElementById('grid');
     const emptyState = document.getElementById('empty');
 
-    function makeCard(id, src) {
+    function makeCard(id, srcNoCb) {
       const fig = document.createElement('figure');
       fig.className = 'card';
       const thumb = document.createElement('div');
@@ -80,47 +78,51 @@
       img.alt = id;
       img.loading = 'lazy';
       img.decoding = 'async';
-      img.src = src;
+      img.src = srcNoCb; // display without cache-buster
       thumb.appendChild(img);
       const cap = document.createElement('figcaption');
       const name = document.createElement('span'); name.className = 'obj'; name.textContent = id;
-      const note = document.createElement('span'); note.className = 'note'; note.textContent = src.split('.').pop().split('?')[0].toUpperCase();
+      const note = document.createElement('span'); note.className = 'note'; note.textContent = srcNoCb.split('.').pop().toUpperCase();
       cap.appendChild(name); cap.appendChild(note);
       fig.appendChild(thumb); fig.appendChild(cap);
       return fig;
     }
 
     const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
+    const added = new Set(); // prevents duplicates like M11 from multiple variants
 
-    // Try to load an image. Only append if it loads successfully.
-    function tryAppend(n) {
-      const bases = [
-        `M${n}`,
-        `M${String(n).padStart(2, '0')}`,
-        `M${String(n).padStart(3, '0')}`,
-      ];
+    function tryVariants(n) {
+      // Preferred order: no pad, 2-digit, 3-digit
+      const bases = [`M${n}`, `M${String(n).padStart(2,'0')}`, `M${String(n).padStart(3,'0')}`];
+      let done = false;
+
       for (const b of bases) {
         for (const e of exts) {
-          const url = `${prefix}${b}.${e}?cb=${Date.now()}`;
+          const url = `${prefix}${b}.${e}`;
+          const testUrl = `${url}?cb=${Date.now()}`; // bust cache when testing
           const img = new Image();
           img.onload = () => {
-            grid.appendChild(makeCard(`M${n}`, url));
+            if (done) return;
+            const key = 'M' + n;
+            if (added.has(key)) return;
+            done = true;
+            added.add(key);
+            grid.appendChild(makeCard(key, url));
             emptyState.style.display = 'none';
           };
           img.onerror = () => {};
-          img.src = url;
+          img.src = testUrl;
         }
       }
     }
 
     (async () => {
-      for (let n = 1; n <= 110; n++) tryAppend(n);
+      for (let n = 1; n <= 110; n++) tryVariants(n);
       grid.setAttribute('aria-busy', 'false');
 
-      // If nothing shows after a short delay, update empty text
       setTimeout(() => {
         if (!grid.children.length) {
-          emptyState.textContent = `No images found at ${prefix}. Try opening one directly to verify, e.g. ${prefix}M11.png`;
+          emptyState.textContent = `No images found at ${prefix}. Try opening one directly to verify, for example ${prefix}M11.png`;
         }
       }, 1200);
     })();
