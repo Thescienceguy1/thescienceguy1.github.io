@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Messier Gallery-Isaac Ceballos</title>
+  <title>Messier Gallery — Isaac Ceballos</title>
   <style>
     :root{--ink:#e2e8f0;--sub:#94a3b8;--bg1:#0f172a;--bg2:#000000;--card:#0b1220;--border:#0ea5e933}
     *{box-sizing:border-box;margin:0;padding:0}
@@ -21,7 +21,7 @@
     figure.card:hover{transform:translateY(-2px);box-shadow:0 0 18px 6px #38bdf833;border-color:#38bdf8}
     .thumb{width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 30% 20%,rgba(56,189,248,.12),transparent 40%),linear-gradient(145deg,#0b1220,#111827);border-bottom:1px solid #0ea5e922;display:grid;place-items:center}
     .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    figcaption{padding:10px 12px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+    figcaption{padding:10px 12px;display:flex;flex-direction:column;gap:4px}
     .obj{font-weight:600}
     .note{font-size:.85rem;color:var(--sub)}
     .empty{margin:24px 0;padding:16px 14px;border:1px dashed #334155;background:#0b1220aa;border-radius:12px;color:var(--sub)}
@@ -32,7 +32,7 @@
   <header>
     <h1>Isaac Ceballos</h1>
     <div class="subtitle">Messier Gallery</div>
-    <div class="tagline">My uploads, Enjoy</div>
+    <div class="tagline">Where I add my pictures</div>
   </header>
 
   <main>
@@ -43,17 +43,53 @@
   <footer>&copy; 2025 Isaac Ceballos.</footer>
 
   <script>
-    // ======= CONFIG =======
-    const BASE_DIR = 'images/messier/'; // folder with your images
-    const EXT = 'png';                  // file extension (png by default)
-    const ZERO_PAD = 0;                 // 0 means M1.png, set 2 for M01.png, 3 for M001.png
-    const START = 1, END = 110;         // range to scan
-    const CONCURRENCY = 12;             // how many image checks at once
-    const CACHE_VERSION = '';           // optional like '?v=1' to hard refresh after updates
+    // Config
+    const BASE_DIR = 'images/messier/';
+    const EXT = 'png';       // change if your files are jpg
+    const ZERO_PAD = 0;      // 0 = M1.png, 2 = M01.png, 3 = M001.png
+    const START = 1, END = 110;
 
-    // Build the file name for a given number
+    // Messier object names (sample, can be expanded)
+    const messierNames = {
+      1: "Crab Nebula",
+      2: "Globular Cluster (Aquarius)",
+      3: "Globular Cluster (Canes Venatici)",
+      4: "Cat's Paw Cluster",
+      5: "Globular Cluster (Serpens)",
+      6: "Butterfly Cluster",
+      7: "Ptolemy Cluster",
+      8: "Lagoon Nebula",
+      9: "Globular Cluster (Ophiuchus)",
+      10: "Globular Cluster (Ophiuchus)",
+      11: "Wild Duck Cluster",
+      12: "Globular Cluster (Ophiuchus)",
+      13: "Hercules Globular Cluster",
+      16: "Eagle Nebula",
+      17: "Omega Nebula",
+      20: "Trifid Nebula",
+      27: "Dumbbell Nebula",
+      31: "Andromeda Galaxy",
+      32: "Companion of Andromeda",
+      33: "Triangulum Galaxy",
+      42: "Orion Nebula",
+      45: "Pleiades",
+      51: "Whirlpool Galaxy",
+      57: "Ring Nebula",
+      63: "Sunflower Galaxy",
+      64: "Black Eye Galaxy",
+      65: "Leo Triplet Galaxy",
+      66: "Leo Triplet Galaxy",
+      81: "Bode's Galaxy",
+      82: "Cigar Galaxy",
+      87: "Virgo A (giant elliptical)",
+      92: "Globular Cluster (Hercules)",
+      101: "Pinwheel Galaxy",
+      104: "Sombrero Galaxy",
+      110: "Companion of Andromeda"
+    };
+
     function buildName(n) {
-      const num = ZERO_PAD > 0 ? String(n).padStart(ZERO_PAD, '0') : String(n);
+      const num = ZERO_PAD > 0 ? String(n).padStart(ZERO_PAD,'0') : String(n);
       return `M${num}.${EXT}`;
     }
 
@@ -62,66 +98,38 @@
         const test = new Image();
         test.onload = () => resolve(true);
         test.onerror = () => resolve(false);
-        // use a stable cache key per page load to avoid hammering network
-        const cb = CACHE_VERSION ? CACHE_VERSION : '';
-        test.src = url + cb;
+        test.src = url + '?cb=' + Date.now();
       });
     }
 
-    function makeCard(id, src) {
-      const fig = document.createElement('figure'); fig.className = 'card';
-      const thumb = document.createElement('div'); thumb.className = 'thumb';
-      const img = document.createElement('img'); img.alt = id; img.loading = 'lazy'; img.decoding = 'async'; img.src = src;
+    function makeCard(n, src) {
+      const fig = document.createElement('figure'); fig.className='card';
+      const thumb=document.createElement('div'); thumb.className='thumb';
+      const img=document.createElement('img'); img.alt=`M${n}`; img.loading='lazy'; img.src=src;
       thumb.appendChild(img);
-      const cap = document.createElement('figcaption');
-      const name = document.createElement('span'); name.className = 'obj'; name.textContent = id;
-      const note = document.createElement('span'); note.className = 'note'; note.textContent = EXT.toUpperCase();
-      cap.appendChild(name); cap.appendChild(note);
+      const cap=document.createElement('figcaption');
+      const name=document.createElement('span'); name.className='obj'; name.textContent=`M${n}`;
+      const desc=document.createElement('span'); desc.className='note'; desc.textContent=messierNames[n]||"";
+      cap.appendChild(name); if(desc.textContent) cap.appendChild(desc);
       fig.appendChild(thumb); fig.appendChild(cap);
       return fig;
     }
 
-    // Concurrency limiter
-    async function mapLimit(items, limit, task) {
-      const results = new Array(items.length);
-      let i = 0;
-      const workers = new Array(Math.min(limit, items.length)).fill(0).map(async () => {
-        while (i < items.length) {
-          const idx = i++;
-          results[idx] = await task(items[idx], idx);
+    (async()=>{
+      const grid=document.getElementById('grid');
+      const empty=document.getElementById('empty');
+      let count=0;
+      for(let n=START;n<=END;n++){
+        const file=buildName(n);
+        const url=BASE_DIR+file;
+        if(await imgExists(url)){
+          grid.appendChild(makeCard(n,url));
+          count++;
         }
-      });
-      await Promise.all(workers);
-      return results;
-    }
-
-    (async () => {
-      const grid = document.getElementById('grid');
-      const empty = document.getElementById('empty');
-
-      // Build the list M1..M110 in order
-      const nums = Array.from({length: END - START + 1}, (_, k) => START + k);
-
-      // Check which ones exist, with limited concurrency
-      const found = await mapLimit(nums, CONCURRENCY, async (n) => {
-        const file = buildName(n);
-        const url = BASE_DIR + file;
-        const ok = await imgExists(url);
-        return ok ? { n, url } : null;
-      });
-
-      // Render strictly in numeric order
-      let count = 0;
-      for (const n of nums) {
-        const item = found.find(x => x && x.n === n);
-        if (!item) continue;
-        grid.appendChild(makeCard(`M${n}`, item.url));
-        count++;
       }
-
-      grid.setAttribute('aria-busy', 'false');
-      empty.style.display = count ? 'none' : 'block';
-      if (!count) empty.textContent = `No images found under ${BASE_DIR}`;
+      grid.setAttribute('aria-busy','false');
+      if(count) empty.style.display='none';
+      else empty.textContent='No images found under '+BASE_DIR;
     })();
   </script>
 </body>
