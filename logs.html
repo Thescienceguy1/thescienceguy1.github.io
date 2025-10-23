@@ -3,138 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Observation Logs | Isaac Ceballos</title>
+  <title>Observing Logs | RetroSkies Lab</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: monospace;
       background: linear-gradient(180deg, #0f172a 0%, #000000 100%);
-      color: #f1f5f9;
+      color: #e2e8f0;
       overflow-x: hidden;
       position: relative;
+      min-height: 100vh;
     }
 
     .starscape {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position: fixed; inset: 0;
       background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Starfield.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0.08;
-      z-index: -2;
-      pointer-events: none;
+      background-size: cover; background-repeat: no-repeat; background-position: center;
+      opacity: 0.08; z-index: -2; pointer-events: none;
     }
-
-    .starscape::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      backdrop-filter: blur(1px);
-      background: rgba(0, 0, 0, 0.1);
-    }
+    .starscape::after { content:""; position:absolute; inset:0; backdrop-filter: blur(1px); background: rgba(0,0,0,0.1); }
 
     .glow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      position: fixed; top: 0; left: 0; width: 40px; height: 40px; border-radius: 50%;
       background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 70%);
-      pointer-events: none;
-      z-index: 1000;
-      mix-blend-mode: overlay;
-      transition: transform 0.05s ease;
+      pointer-events: none; z-index: 1000; mix-blend-mode: overlay; transition: transform 0.05s ease;
     }
 
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      background: #1e293b;
-      flex-wrap: wrap;
-      z-index: 1;
+      display: grid; grid-template-columns: 1fr auto; align-items: center;
+      gap: 16px; padding: 20px; background: #1e293b;
+      position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #0b1220;
+    }
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+    .brand h1 { font-size: 1.8rem; line-height: 1.1; }
+    .brand p { font-size: 0.95rem; color: #94a3b8; margin-top: 4px; }
+
+    .header-links { display: flex; gap: 14px; align-items: center; }
+    .header-links a {
+      color: #cbd5e1; text-decoration: none; font-size: 0.95rem; padding: 6px 10px;
+      border: 1px solid transparent; border-radius: 10px; transition: border-color .2s, color .2s, background .2s;
+    }
+    .header-links a:hover { color: #e2e8f0; border-color: #38bdf833; background: #0b1220; }
+
+    /* Page shell */
+    .page {
+      max-width: 1200px; margin: 0 auto; padding: 24px; display: grid; gap: 18px;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
+    .page-heading {
+      display: grid; gap: 6px;
+    }
+    .page-heading h2 { font-size: 1.6rem; }
+    .page-heading p { color: #94a3b8; font-size: 0.95rem; }
+
+    /* Controls */
+    .controls {
+      display: grid; gap: 10px;
+      grid-template-columns: 1fr auto auto auto;
+    }
+    @media (max-width: 900px) {
+      .controls { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .controls { grid-template-columns: 1fr; }
     }
 
-    header img {
-      width: 80px;
-      margin-right: 20px;
-      border-radius: 8px;
+    .field { display: grid; gap: 6px; }
+    .field label { color: #93a3b7; font-size: 12px; }
+    .input, .select {
+      background: #0b1220; color: #e2e8f0; border: 1px solid #0ea5e933;
+      padding: 10px 12px; border-radius: 12px; outline: none;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
+    /* Cards grid (match home card feel) */
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0b1220; border: 1px solid #0ea5e933; border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      overflow: hidden; display: grid; grid-template-rows: auto 1fr;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 0 20px 6px #38bdf833; border-color: #38bdf8; }
+    .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #050913; }
+
+    .card-body { display: grid; gap: 10px; padding: 16px; }
+    .title { font-size: 1.05rem; color: #f1f5f9; }
+    .meta { color: #cbd5e1; font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 8px; }
+    .kv { color: #94a3b8; font-size: 0.88rem; display: flex; flex-wrap: wrap; gap: 12px; }
+    .notes { color: #cbd5e1; font-size: 0.92rem; line-height: 1.45; }
+    .links { display: flex; gap: 12px; }
+    .links a { color: #38bdf8; text-decoration: none; font-size: 0.92rem; }
+
+    .empty {
+      text-align: center; color: #94a3b8; border: 1px dashed #0ea5e933; border-radius: 14px;
+      padding: 28px; background: #0b1220cc;
     }
 
-    header p {
-      margin: 5px 0;
-      font-size: 1.2em;
-      color: #94a3b8;
-    }
+    .shape { position: absolute; border-radius: 9999px; opacity: 0.15; filter: blur(24px); pointer-events: none; }
+    .shape.one { width: 240px; height: 240px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); top: -40px; right: -20px; }
+    .shape.two { width: 260px; height: 260px; background: radial-gradient(circle at 60% 60%, #22d3ee, transparent 65%); bottom: -30px; left: -30px; }
 
-    .nav-link {
-      text-align: center;
-      margin: 20px 0 0 0;
-    }
-
-    .nav-link a {
-      color: #38bdf8;
-      text-decoration: none;
-      font-size: 1.1em;
-      transition: color 0.3s, text-shadow 0.3s;
-    }
-
-    .nav-link a:hover {
-      color: #0ea5e9;
-      text-shadow: 0 0 8px #38bdf8;
-    }
-
-    .container {
-      padding: 40px 20px 60px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .log-entry {
-      background: rgba(56, 189, 248, 0.1);
-      border-left: 4px solid #38bdf8;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 8px;
-    }
-
-    .log-entry h2 {
-      margin-bottom: 10px;
-      font-size: 1.5em;
-      color: #38bdf8;
-    }
-
-    .log-entry p {
-      font-size: 1.1em;
-      color: #f1f5f9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #94a3b8;
-    }
+    footer { text-align: center; padding: 24px; color: #94a3b8; margin-top: 16px; }
   </style>
 </head>
 <body>
@@ -142,42 +116,186 @@
   <div class="glow" id="glow"></div>
 
   <header>
-    <div class="logo">
+    <div class="brand">
       <img src="retroskies-logo.png" alt="Retroskies Lab Logo" />
       <div>
         <h1>Isaac Ceballos</h1>
-        <p>Observation Logs</p>
+        <p>Engineering Student | Researcher | Innovator</p>
       </div>
     </div>
+    <nav class="header-links" aria-label="Header links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+    </nav>
   </header>
 
-  <div class="nav-link">
-    <a href="index.html">&larr; Back to Home</a>
-  </div>
+  <main class="page">
+    <section class="page-heading">
+      <h2>Observing Logs</h2>
+      <p>Auto pulls from a Google Sheet. Add a row in the sheet and it appears here.</p>
+    </section>
 
-  <div class="container">
-    <div class="log-entry">
-      <h2>July 10, 2025</h2>
-      <p>Test entry, clear skies and smooth tracking. EV Lac observed for about 1.5 hours. Saw possible minor flare activity. More detailed analysis coming soon.</p>
-    </div>
+    <section class="controls" aria-label="Filters">
+      <div class="field">
+        <label for="q">Search</label>
+        <input id="q" class="input" type="search" placeholder="Target, site, instrument, notes" />
+      </div>
+      <div class="field">
+        <label for="sort">Sort</label>
+        <select id="sort" class="select">
+          <option value="date_desc">Newest first</option>
+          <option value="date_asc">Oldest first</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="from">From</label>
+        <input id="from" class="input" type="date" />
+      </div>
+      <div class="field">
+        <label for="to">To</label>
+        <input id="to" class="input" type="date" />
+      </div>
+    </section>
 
-    <div class="log-entry">
-      <h2>July 8, 2025</h2>
-      <p>Hazy at first, but conditions cleared up around 10PM. Captured clean shots of target region. Light curve review still in progress.</p>
-    </div>
+    <section id="grid" class="grid">
+      <div class="empty">Loading logs...</div>
+    </section>
 
-    <!-- Add more logs here -->
-  </div>
+    <div class="shape one"></div>
+    <div class="shape two"></div>
+  </main>
 
-  <footer>
-    &copy; 2025 Isaac Ceballos. All rights reserved.
-  </footer>
+  <footer>&copy; 2025 Isaac Ceballos. All rights reserved.</footer>
 
   <script>
+    // Cursor glow movement
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
       glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
+
+    // ===== Data loader =====
+    // Published Google Sheet CSV URL (from you)
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQPAEPUqRu48jue4tonsW_0bP3yTvP8SsHj-CTgJvwfUtrfNkkvhdlcqY8krpKTxHHKHrBkLbyJoA3j/pub?output=csv";
+
+    // Expected headers:
+    // date,start_time,end_time,site,target,instrument,exposure,frames,seeing,transparency,bortle,best_image_url,fits_url,notes
+
+    function parseCSV(text) {
+      // Simple CSV parsing (no quoted commas). If you need commas in notes, switch to a robust parser.
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if (!lines.length) return [];
+      const headers = lines.shift().split(",").map(h => h.trim());
+      return lines.map(line => {
+        const cells = line.split(",").map(c => c.trim());
+        const obj = {};
+        headers.forEach((h,i)=> obj[h] = cells[i] ?? "");
+        return obj;
+      });
+    }
+
+    function toDate(value) {
+      const t = Date.parse(value);
+      return isNaN(t) ? null : new Date(t);
+    }
+
+    function filterAndSort(rows) {
+      const q = document.getElementById("q").value.toLowerCase().trim();
+      const sort = document.getElementById("sort").value;
+      const from = document.getElementById("from").value ? new Date(document.getElementById("from").value) : null;
+      const to = document.getElementById("to").value ? new Date(document.getElementById("to").value) : null;
+
+      let out = rows.filter(r => {
+        // search
+        const hay = `${r.target} ${r.site} ${r.instrument} ${r.notes}`.toLowerCase();
+        if (q && !hay.includes(q)) return false;
+
+        // date range
+        const d = toDate(r.date);
+        if (from && d && d < from) return false;
+        if (to && d && d > to) return false;
+
+        return true;
+      });
+
+      out.sort((a,b) => {
+        const da = toDate(a.date) || new Date(0);
+        const db = toDate(b.date) || new Date(0);
+        return sort === "date_asc" ? da - db : db - da;
+      });
+
+      return out;
+    }
+
+    function render(rows) {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      if (!rows.length) {
+        grid.innerHTML = `<div class="empty">No logs match your filters.</div>`;
+        return;
+      }
+
+      for (const r of rows) {
+        const el = document.createElement("article");
+        el.className = "card";
+
+        const img = r.best_image_url ? `<img class="thumb" loading="lazy" src="${r.best_image_url}" alt="">`
+                                     : `<div class="thumb"></div>`;
+
+        el.innerHTML = `
+          ${img}
+          <div class="card-body">
+            <div class="title">${r.target || "Untitled target"}</div>
+            <div class="meta">
+              <span>${r.date || ""}</span>
+              ${r.site ? `<span>• ${r.site}</span>` : ""}
+              ${r.instrument ? `<span>• ${r.instrument}</span>` : ""}
+              ${r.bortle ? `<span>• Bortle ${r.bortle}</span>` : ""}
+            </div>
+            <div class="kv">
+              ${r.exposure ? `<span>Exposure: ${r.exposure}</span>` : ""}
+              ${r.frames ? `<span>Frames: ${r.frames}</span>` : ""}
+              ${r.seeing ? `<span>Seeing: ${r.seeing}</span>` : ""}
+              ${r.transparency ? `<span>Transparency: ${r.transparency}</span>` : ""}
+              ${r.start_time ? `<span>Start: ${r.start_time}</span>` : ""}
+              ${r.end_time ? `<span>End: ${r.end_time}</span>` : ""}
+            </div>
+            ${r.notes ? `<div class="notes">${r.notes}</div>` : ""}
+            <div class="links">
+              ${r.best_image_url ? `<a href="${r.best_image_url}" target="_blank" rel="noopener">Image</a>` : ""}
+              ${r.fits_url ? `<a href="${r.fits_url}" target="_blank" rel="noopener">FITS</a>` : ""}
+            </div>
+          </div>
+        `;
+        grid.appendChild(el);
+      }
+    }
+
+    async function loadLogs() {
+      try {
+        const res = await fetch(CSV_URL + (CSV_URL.includes("?") ? "&" : "?") + "nocache=" + Date.now(), { cache: "no-store" });
+        const text = await res.text();
+        const rows = parseCSV(text);
+        window.__LOG_ROWS__ = rows;
+        render(filterAndSort(rows));
+      } catch (err) {
+        const grid = document.getElementById("grid");
+        grid.innerHTML = `<div class="empty">Could not load logs. Check your CSV URL.</div>`;
+      }
+    }
+
+    // Bind controls
+    ["q","sort","from","to"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__));
+      });
+      document.getElementById(id).addEventListener("change", () => {
+        if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__));
+      });
+    });
+
+    loadLogs();
   </script>
 </body>
 </html>
