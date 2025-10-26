@@ -182,16 +182,56 @@
     // date,start_time,end_time,site,target,instrument,exposure,frames,seeing,transparency,bortle,best_image_url,fits_url,notes
 
     function parseCSV(text) {
-      // Simple CSV parsing (no quoted commas). If you need commas in notes, switch to a robust parser.
-      const lines = text.split(/\r?\n/).filter(Boolean);
-      if (!lines.length) return [];
-      const headers = lines.shift().split(",").map(h => h.trim());
-      return lines.map(line => {
-        const cells = line.split(",").map(c => c.trim());
+      // Robust-ish CSV parser supporting quoted fields and commas inside quotes
+      const rows = [];
+      let i = 0, field = '', row = [], inQuotes = false;
+      const pushField = () => { row.push(field); field = ''; };
+      const pushRow = () => { if (row.length) rows.push(row); row = []; };
+      while (i < text.length) {
+        const c = text[i];
+        if (inQuotes) {
+          if (c === '"' && text[i+1] === '"') { field += '"'; i += 2; continue; }
+          if (c === '"') { inQuotes = false; i++; continue; }
+          field += c; i++; continue;
+        } else {
+          if (c === '"') { inQuotes = true; i++; continue; }
+          if (c === ',') { pushField(); i++; continue; }
+          if (c === '
+' || c === '
+') {
+            // handle CRLF/LF
+            // skip 
+ in CRLF
+            if (c === '
+' && text[i+1] === '
+') i++;
+            pushField(); pushRow(); i++; continue;
+          }
+          field += c; i++; continue;
+        }
+      }
+      // push last field/row
+      pushField(); pushRow();
+      if (!rows.length) return [];
+      const headers = rows.shift().map(h => h.trim());
+      return rows.filter(r => r.some(x => x && x.trim().length)).map(cells => {
         const obj = {};
-        headers.forEach((h,i)=> obj[h] = cells[i] ?? "");
+        headers.forEach((h, idx) => obj[h] = (cells[idx] || '').trim());
         return obj;
       });
+    }
+
+    function normalizeImageURL(u) {
+      if (!u) return '';
+      // Convert common Imgur page URLs to direct image links
+      // imgur.com/abcd -> i.imgur.com/abcd.jpg (default to .jpg)
+      const m1 = u.match(/^https?:\/\/imgur\.com\/([A-Za-z0-9]+)$/);
+      if (m1) return `https://i.imgur.com/${m1[1]}.jpg`;
+      // imgur gallery links won't work; leave as-is
+      // Google Drive view -> direct view
+      const m2 = u.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/]+)\//);
+      if (m2) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
+      return u;
     }
 
     function toDate(value) {
@@ -240,8 +280,9 @@
         const el = document.createElement("article");
         el.className = "card";
 
-        const img = r.best_image_url ? `<img class="thumb" loading="lazy" src="${r.best_image_url}" alt="">`
-                                     : `<div class="thumb"></div>`;
+        const imgURL = normalizeImageURL(r.best_image_url);
+        const img = imgURL ? `<img class=\"thumb\" loading=\"lazy\" src=\"${imgURL}\" alt=\"\">`
+                                     : `<div class=\"thumb\"></div>`;
 
         el.innerHTML = `
           ${img}
