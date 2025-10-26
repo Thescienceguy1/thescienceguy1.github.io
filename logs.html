@@ -171,22 +171,18 @@
     // Cursor glow movement
     document.addEventListener("mousemove", (e) => {
       const glow = document.getElementById("glow");
-      glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+      if (glow) glow.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
     });
 
     // ===== Data loader =====
-    // Published Google Sheet CSV URL (from you)
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQPAEPUqRu48jue4tonsW_0bP3yTvP8SsHj-CTgJvwfUtrfNkkvhdlcqY8krpKTxHHKHrBkLbyJoA3j/pub?output=csv";
 
-    // Expected headers:
-    // date,start_time,end_time,site,target,instrument,exposure,frames,seeing,transparency,bortle,best_image_url,fits_url,notes
-
+    // Parse CSV with quoted-field support
     function parseCSV(text) {
-      // Robust-ish CSV parser supporting quoted fields and commas inside quotes
       const rows = [];
-      let i = 0, field = '', row = [], inQuotes = false;
-      const pushField = () => { row.push(field); field = ''; };
-      const pushRow = () => { if (row.length) rows.push(row); row = []; };
+      let i = 0, field = "", row = [], inQuotes = false;
+      function pushField(){ row.push(field); field = ""; }
+      function pushRow(){ rows.push(row); row = []; }
       while (i < text.length) {
         const c = text[i];
         if (inQuotes) {
@@ -196,144 +192,128 @@
         } else {
           if (c === '"') { inQuotes = true; i++; continue; }
           if (c === ',') { pushField(); i++; continue; }
-          if (c === '
-' || c === '
-') {
-            // handle CRLF/LF
-            // skip 
- in CRLF
-            if (c === '
-' && text[i+1] === '
-') i++;
-            pushField(); pushRow(); i++; continue;
+          if (c === '\r' || c === '\n') {
+            if (c === '\r' && text[i+1] === '\n') i++;
+            pushField();
+            if (row.length > 1 || (row.length === 1 && row[0] !== "")) pushRow();
+            i++; continue;
           }
           field += c; i++; continue;
         }
       }
-      // push last field/row
-      pushField(); pushRow();
+      // last field/row
+      pushField(); if (row.length) pushRow();
       if (!rows.length) return [];
       const headers = rows.shift().map(h => h.trim());
-      return rows.filter(r => r.some(x => x && x.trim().length)).map(cells => {
-        const obj = {};
-        headers.forEach((h, idx) => obj[h] = (cells[idx] || '').trim());
-        return obj;
-      });
+      return rows
+        .filter(r => r.some(x => (x || "").trim().length))
+        .map(cells => {
+          const obj = {};
+          headers.forEach((h, idx) => obj[h] = (cells[idx] || "").trim());
+          return obj;
+        });
     }
 
     function normalizeImageURL(u) {
-      if (!u) return '';
-      // Convert common Imgur page URLs to direct image links
-      // imgur.com/abcd -> i.imgur.com/abcd.jpg (default to .jpg)
+      if (!u) return "";
+      // Trim whitespace
+      u = ("" + u).trim();
+      // Convert imgur page URL to direct file if needed
       const m1 = u.match(/^https?:\/\/imgur\.com\/([A-Za-z0-9]+)$/);
-      if (m1) return `https://i.imgur.com/${m1[1]}.jpg`;
-      // imgur gallery links won't work; leave as-is
-      // Google Drive view -> direct view
-      const m2 = u.match(/^https?:\/\/drive\.google\.com\/file\/d\/([^/]+)\//);
-      if (m2) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
+      if (m1) return "https://i.imgur.com/" + m1[1] + ".jpg";
       return u;
     }
 
-    function toDate(value) {
-      const t = Date.parse(value);
-      return isNaN(t) ? null : new Date(t);
-    }
+    function toDate(v){ const t = Date.parse(v); return isNaN(t) ? null : new Date(t); }
 
     function filterAndSort(rows) {
-      const q = document.getElementById("q").value.toLowerCase().trim();
-      const sort = document.getElementById("sort").value;
-      const from = document.getElementById("from").value ? new Date(document.getElementById("from").value) : null;
-      const to = document.getElementById("to").value ? new Date(document.getElementById("to").value) : null;
+      const qEl = document.getElementById("q");
+      const sortEl = document.getElementById("sort");
+      const fromEl = document.getElementById("from");
+      const toEl = document.getElementById("to");
+      const q = (qEl && qEl.value || "").toLowerCase().trim();
+      const sort = sortEl ? sortEl.value : "date_desc";
+      const from = fromEl && fromEl.value ? new Date(fromEl.value) : null;
+      const to = toEl && toEl.value ? new Date(toEl.value) : null;
 
       let out = rows.filter(r => {
-        // search
-        const hay = `${r.target} ${r.site} ${r.instrument} ${r.notes}`.toLowerCase();
+        const hay = `${r.target || ""} ${r.site || ""} ${r.instrument || ""} ${r.notes || ""}`.toLowerCase();
         if (q && !hay.includes(q)) return false;
-
-        // date range
         const d = toDate(r.date);
         if (from && d && d < from) return false;
         if (to && d && d > to) return false;
-
         return true;
       });
 
       out.sort((a,b) => {
         const da = toDate(a.date) || new Date(0);
         const db = toDate(b.date) || new Date(0);
-        return sort === "date_asc" ? da - db : db - da;
+        return sort === "date_asc" ? (da - db) : (db - da);
       });
-
       return out;
     }
 
     function render(rows) {
       const grid = document.getElementById("grid");
+      if (!grid) return;
       grid.innerHTML = "";
-
       if (!rows.length) {
-        grid.innerHTML = `<div class="empty">No logs match your filters.</div>`;
+        grid.innerHTML = '<div class="empty">No logs match your filters.</div>';
         return;
       }
-
       for (const r of rows) {
         const el = document.createElement("article");
         el.className = "card";
-
         const imgURL = normalizeImageURL(r.best_image_url);
-        const img = imgURL ? `<img class=\"thumb\" loading=\"lazy\" src=\"${imgURL}\" alt=\"\">`
-                                     : `<div class=\"thumb\"></div>`;
-
-        el.innerHTML = `
-          ${img}
-          <div class="card-body">
-            <div class="title">${r.target || "Untitled target"}</div>
-            <div class="meta">
-              <span>${r.date || ""}</span>
-              ${r.site ? `<span>• ${r.site}</span>` : ""}
-              ${r.instrument ? `<span>• ${r.instrument}</span>` : ""}
-              ${r.bortle ? `<span>• Bortle ${r.bortle}</span>` : ""}
-            </div>
-            <div class="kv">
-              ${r.exposure ? `<span>Exposure: ${r.exposure}</span>` : ""}
-              ${r.frames ? `<span>Frames: ${r.frames}</span>` : ""}
-              ${r.seeing ? `<span>Seeing: ${r.seeing}</span>` : ""}
-              ${r.transparency ? `<span>Transparency: ${r.transparency}</span>` : ""}
-              ${r.start_time ? `<span>Start: ${r.start_time}</span>` : ""}
-              ${r.end_time ? `<span>End: ${r.end_time}</span>` : ""}
-            </div>
-            ${r.notes ? `<div class="notes">${r.notes}</div>` : ""}
-            <div class="links">
-              ${r.best_image_url ? `<a href="${r.best_image_url}" target="_blank" rel="noopener">Image</a>` : ""}
-              ${r.fits_url ? `<a href="${r.fits_url}" target="_blank" rel="noopener">FITS</a>` : ""}
-            </div>
-          </div>
-        `;
+        const img = imgURL ? '<img class="thumb" loading="lazy" src="' + imgURL + '" alt="" />' : '<div class="thumb"></div>';
+        el.innerHTML = img +
+          '<div class="card-body">' +
+            '<div class="title">' + (r.target || 'Untitled target') + '</div>' +
+            '<div class="meta">' +
+              '<span>' + (r.date || '') + '</span>' +
+              (r.site ? '<span>• ' + r.site + '</span>' : '') +
+              (r.instrument ? '<span>• ' + r.instrument + '</span>' : '') +
+              (r.bortle ? '<span>• Bortle ' + r.bortle + '</span>' : '') +
+            '</div>' +
+            '<div class="kv">' +
+              (r.exposure ? '<span>Exposure: ' + r.exposure + '</span>' : '') +
+              (r.frames ? '<span>Frames: ' + r.frames + '</span>' : '') +
+              (r.seeing ? '<span>Seeing: ' + r.seeing + '</span>' : '') +
+              (r.transparency ? '<span>Transparency: ' + r.transparency + '</span>' : '') +
+              (r.start_time ? '<span>Start: ' + r.start_time + '</span>' : '') +
+              (r.end_time ? '<span>End: ' + r.end_time + '</span>' : '') +
+            '</div>' +
+            (r.notes ? '<div class="notes">' + r.notes + '</div>' : '') +
+            '<div class="links">' +
+              (imgURL ? '<a href="' + imgURL + '" target="_blank" rel="noopener">Image</a>' : '') +
+              (r.fits_url ? '<a href="' + r.fits_url + '" target="_blank" rel="noopener">FITS</a>' : '') +
+            '</div>' +
+          '</div>';
         grid.appendChild(el);
       }
     }
 
     async function loadLogs() {
+      const grid = document.getElementById('grid');
       try {
-        const res = await fetch(CSV_URL + (CSV_URL.includes("?") ? "&" : "?") + "nocache=" + Date.now(), { cache: "no-store" });
+        const url = CSV_URL + (CSV_URL.includes('?') ? '&' : '?') + 'nocache=' + Date.now();
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const text = await res.text();
         const rows = parseCSV(text);
         window.__LOG_ROWS__ = rows;
         render(filterAndSort(rows));
       } catch (err) {
-        const grid = document.getElementById("grid");
-        grid.innerHTML = `<div class="empty">Could not load logs. Check your CSV URL.</div>`;
+        if (grid) grid.innerHTML = '<div class="empty">Could not load logs (' + (err.message || err) + ').</div>';
       }
     }
 
-    // Bind controls
+    // Bind controls safely
     ["q","sort","from","to"].forEach(id => {
-      document.getElementById(id).addEventListener("input", () => {
-        if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__));
-      });
-      document.getElementById(id).addEventListener("change", () => {
-        if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__));
-      });
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("input", () => { if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__)); });
+      el.addEventListener("change", () => { if (window.__LOG_ROWS__) render(filterAndSort(window.__LOG_ROWS__)); });
     });
 
     loadLogs();
